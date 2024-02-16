@@ -1,5 +1,5 @@
 <script>
-  import { json } from "d3";
+  import { json,csv } from "d3";
   import { onMount } from 'svelte';
   import Interactive_Map from "./Interactive_Map.svelte";
   import { read, utils, writeFile } from 'xlsx';
@@ -13,10 +13,8 @@
 	})
 
   onMount(async () => {
-    const f = await (await fetch("https://civilrightsdata.ed.gov/assets/downloads/2017-2018/Student-Retention/Retention-(by-grade)/Retention-in-Grade-1.xlsx")).arrayBuffer();
-    const wb = read(f);
-    const gradeinfo = utils.sheet_to_json<Grade>(wb.Sheets[wb.SheetNames[0]]);
-    console.log(gradeinfo);
+    const wb = await csv('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/2017-18%20grade2.csv');
+    console.log(wb);
 
 
   })
