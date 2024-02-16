@@ -13,7 +13,7 @@
 	})
 
   onMount(async () => {
-    const wb = await csv('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/2017-18%20grade2.csv');
+    const wb = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/2017-18 grade2.json');
     console.log(wb);
 
 
