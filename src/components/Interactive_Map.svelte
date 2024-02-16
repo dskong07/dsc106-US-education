@@ -8,6 +8,7 @@
 	export let grade2 = [];
 	const projection = geoAlbersUsa()	
 	const path = geoPath(projection)
+	let clicked = -1;
 	let selected ={
 		properties:{
 			name:'50 states, District of Columbia, and Puerto Rico'
@@ -29,7 +30,7 @@
                 <path 
                 d={path(feature)} 
                 fill={i===hovered ? "hsl(0 0% 50% / 20%)" : myColor(grade2[feature.properties.name].Total)}
-                on:click={() => selected = feature} 
+                on:click={() => {selected = feature; clicked = 1}} 
                 on:mouseover={(event) =>{
                     hovered = i; recorded_mouse_position = {
                         x: event.pageX,
@@ -50,9 +51,15 @@
 
 
 <div class="tooltip-selected">
-	Selected: {selected?.properties.name ?? 'Pick a state!'}
-	had {grade2[selected?.properties.name].Total ?? 'Pick a state!'}
-	students held back in 2017-2018!
+	
+	
+	{#if clicked !== -1}
+		Selected: {selected.properties.name}
+		had {grade2[selected.properties.name].Total}
+		second year students held back in 2017-2018!
+	{:else}
+		pick a state!
+	{/if}
 </div>
 
 <div	
