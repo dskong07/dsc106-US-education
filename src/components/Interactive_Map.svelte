@@ -5,16 +5,21 @@
 	import { geoPath, geoAlbersUsa } from 'd3-geo';
 	import { draw } from 'svelte/transition';
 	export let dataset = [];
+	export let grade2 = [];
 	const projection = geoAlbersUsa()	
 	const path = geoPath(projection)
-	let selected;
+	let selected ={
+		properties:{
+			name:'50 states, District of Columbia, and Puerto Rico'
+		}
+	};
 	let hovered = -1; 
 	let recorded_mouse_position = {
 		x: 0, y: 0
 	};
 	
 	
-
+	var myColor = d3.scaleLinear().domain([0,10000]).range(['white','blue'])
 	
 </script>
 <div class="visualization">
@@ -23,7 +28,7 @@
             {#each dataset as feature,i}
                 <path 
                 d={path(feature)} 
-                fill={i===hovered ? "hsl(0 0% 50% / 20%)" : "white"}
+                fill={i===hovered ? "hsl(0 0% 50% / 20%)" : myColor(grade2[feature.properties.name].Total)}
                 on:click={() => selected = feature} 
                 on:mouseover={(event) =>{
                     hovered = i; recorded_mouse_position = {
@@ -45,7 +50,9 @@
 
 
 <div class="tooltip-selected">
-	State selected: {selected?.properties.name ?? 'Pick a state!'}
+	Selected: {selected?.properties.name ?? 'Pick a state!'}
+	had {grade2[selected?.properties.name].Total ?? 'Pick a state!'}
+	students held back in 2017-2018!
 </div>
 
 <div	

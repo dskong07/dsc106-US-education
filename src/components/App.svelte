@@ -12,8 +12,10 @@
 		console.log({ dataset })
 	})
 
+  let grade2 = [];
   onMount(async () => {
-    const wb = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/2017-18 grade2.json');
+    const wb = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/gendery2.json')
+    grade2 = wb
     console.log(wb);
 
 
@@ -28,7 +30,7 @@
 
   <section class="graph">
     <h2 style="margin-top: 15px">USA</h2>
-    <Interactive_Map {dataset}/>
+    <Interactive_Map {dataset}{grade2}/>
   
   </section>
 </main>
