@@ -13,7 +13,7 @@
 	})
 
   onMount(async () => {
-    const f = await (await fetch("https://github.com/dkong07/dsc106-p3/blob/630bc47b9418d7d68af7eeaf8c94e9c7436fa446/retention_y2.xlsx")).arrayBuffer();
+    const f = await (await fetch("https://civilrightsdata.ed.gov/assets/downloads/2017-2018/Student-Retention/Retention-(by-grade)/Retention-in-Grade-1.xlsx")).arrayBuffer();
     const wb = read(f);
     const gradeinfo = utils.sheet_to_json<Grade>(wb.Sheets[wb.SheetNames[0]]);
     console.log(gradeinfo);
