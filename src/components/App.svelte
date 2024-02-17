@@ -3,6 +3,8 @@
   import { onMount } from 'svelte';
   import Interactive_Map from "./Interactive_Map.svelte";
   import { read, utils, writeFile } from 'xlsx';
+  import Button from "./Button.svelte";
+  
   
   let dataset = [];
   onMount(async () => {
@@ -18,16 +20,32 @@
     grade2 = wb
     console.log(wb);
 
-
   })
   
-
+  //This is for the checkmark, Yes for yes clicking
+  let yes = true;
 
 </script>
 
+<!-- Adding a checkmark for gender, THE default is total which is denoted by clicking both Male and Female -->
+<div class="gender_filter">
+  <h3>Filter based on Gender</h3>
+	<label>
+    <input type="checkbox" bind:checked={yes} />
+    Female
+  </label>
+  <label>
+    <input type="checkbox" bind:checked={yes} />
+    Male
+  </label>
+</div>
+
+<!-- A button to apply filter -->.
+<Button class="primary lg">
+	Apply Filter
+</Button>
+
 <main>
-
-
   <section class="graph">
     <h2 style="margin-top: 15px">USA</h2>
     <Interactive_Map {dataset}{grade2}/>
