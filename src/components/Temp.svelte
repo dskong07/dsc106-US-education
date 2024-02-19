@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 
 	import { onMount } from 'svelte';
 	import * as d3 from 'd3';
@@ -9,7 +9,6 @@
 	export let grade2 = [];
 	const projection = geoAlbersUsa()	
 	const path = geoPath(projection)
-	var genders = ["Overall", "Male", "Female"]
 	let clicked = -1;
 	let selected ={
 		properties:{
@@ -20,18 +19,28 @@
 	let recorded_mouse_position = {
 		x: 0, y: 0
 	};
+
 	
-  	onMount(async () => {
-		const wb = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/gendery2.json')
-    	grade2 = wb
-    	console.log(wb);
+
+	 
+ // draw map
+ 	onMount(async ()=> {
+
 		const us = await fetch('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/us-states.json')
 			.then(d => d.json())
 		dataset = us.features
 		console.log({ dataset })
 
-		var gen = await d3.select('#gender')
-        gen
+		const wb = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/gendery2.json')
+    	grade2 = wb
+    	console.log(wb);
+
+		var genders = ["Overall", "Male", "Female"]
+        var gen = await d3.select('#gender')
+
+		var myColor = d3.scaleLinear().domain([0,10000]).range(['white','blue'])
+        
+		gen
         .selectAll('myOptions')
             .data(genders)
         .enter()
@@ -39,77 +48,54 @@
         .text(function (d) { return d; })
         .attr("value", function (d) { return d; })
 
-		function update(gen){
-			var altcolor = d3.scaleLinear().domain([0,grade2['50 states, District of Columbia, and Puerto Rico'][gen]/50]).range(['white','red'])
-			if (gen==='Overall'){
-				gen = "Total"
-				var altcolor = d3.scaleLinear().domain([0,5000]).range(['white','blue'])
-			}
-			
+		var svg = await d3.select("#temp").append("svg").attr("viewBox", "0 0 900 610")
 
-			console.log(gen)
-			var states = d3.select("#mappy").selectAll("path").data(dataset)
-			states.enter()
-			console.log("here")
-			states
-			.transition()
-			.delay(20)
-			.duration(1000)
-			.attr("fill", function(d){
-				return altcolor(grade2[d.properties.name][gen])
-			})
-			
+
+		function update(ddd){
+			var u = svg.selectAll("path")
+    			.data(ddd)
+			u
+				.enter()
+				.append("path")
+				.attr("in:draw", "{{ delay: 0, duration: 1000 }}")
+				.attr("class","state")
+				.attr("d", path)
+				.attr("fill", function (d){
+					return myColor(grade2[d.properties.name].Total);
+				})
+				.attr('stroke', 'black')
+				
 		}
-
-		gen.on("change", function(d) {
-			var selectedOption = d3.select(this).property("value")
-			update(selectedOption)
-		}
-		)
-
-
-	})
-
-	
-	var myColor = d3.scaleLinear().domain([0,8000]).range(['white','blue'])
+		
+			
+		console.log(dataset)
+        
+		update(dataset)
 	
 
+
+    }
+	)
+ 
+ // add labels
+
+
+    
+
+	
 	
 </script>
 
-
-<div class="visualization">
-    <svg id="mappy" viewBox="0 0 900 610">
-        <g fill="white" stroke="black">
-            {#each dataset as feature,i}
-                <path 
-                d={path(feature)} 
-                fill={myColor(grade2[feature.properties.name].Total)}
-                on:click={() => {selected = feature; clicked = 1}} 
-                on:mouseover={(event) =>{
-                    hovered = i; recorded_mouse_position = {
-                        x: event.pageX,
-                        y: event.pageY
-                    }
-                    //console.log(i, recorded_mouse_position)
-                }}
-                on:mouseout={(event) => { hovered = -1; }}
-                class="state"
-				
-                in:draw={{ delay: 0, duration: 1000 }} />
-            {/each}
-        </g>		
-        {#if selected}
-            <path d={path(selected)} fill="hsl(0 5% 50% / 60%)" stroke="black" stroke-width={2} />
-        {/if}
-    </svg>
-</div>
 <section class="dropdowns">
     <h3>
         Gender
     </h3>
     <select id="gender"></select>
 </section>
+
+<div id="temp">
+
+</div>
 
 <div class="tooltip-selected">
 	
@@ -161,6 +147,7 @@ style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y
 		position: absolute;
 		padding: 10px;
 	}
+
 </style>
 
 <!---->
