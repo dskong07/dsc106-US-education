@@ -41,6 +41,7 @@
     
     </section>
   </div>
+  <!--
   <div class='applets'>
     <section class="filter">
       <h2>
@@ -50,6 +51,8 @@
       
     </section>
   </div>
+  -->
+
 
 </main>
 

@@ -40,7 +40,7 @@
         .attr("value", function (d) { return d; })
 
 		function update(gen){
-			var altcolor = d3.scaleLinear().domain([0,grade2['50 states, District of Columbia, and Puerto Rico'][gen]/50]).range(['white','red'])
+			var altcolor = d3.scaleLinear().domain([0,grade2['50 states, District of Columbia, and Puerto Rico'][gen]/57]).range(['white','red'])
 			if (gen==='Overall'){
 				gen = "Total"
 				var altcolor = d3.scaleLinear().domain([0,5000]).range(['white','blue'])
