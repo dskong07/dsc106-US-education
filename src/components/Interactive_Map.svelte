@@ -1,5 +1,5 @@
 <script>
-	
+
 	import { onMount } from 'svelte';
 	import * as d3 from 'd3';
 	import {json} from 'd3'
@@ -11,13 +11,13 @@
 	const path = geoPath(projection)
 
 	 /** list of option for gender dropdown */ 
-	var genders = ["Overall", "Male", "Female"]
+	 var genders = ["Overall", "Male", "Female"]
 
-	 /** list of option for race dropdown */ 
-	 var race = ["Overall", "White", "Asian"]
+	/** list of option for race dropdown */ 
+	var race = ["Overall", "White", "Asian"]
 
-	 /** list of option for year dropdown */ 
-	 var year = ["Overall", "Elementary", "Middle", "High"]
+	/** list of option for year dropdown */ 
+	var year = ["Overall", "Elementary", "Middle", "High"]
 
 	 /** user interaction through mouse */ 
 	let clicked = -1;
@@ -31,7 +31,6 @@
 		x: 0, y: 0
 	};
 	
-
   	onMount(async () => {
 		const wb = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/gendery2.json')
     	grade2 = wb
@@ -40,7 +39,7 @@
 			.then(d => d.json())
 		dataset = us.features
 		console.log({ dataset })
-		
+
 		 /** gen is the button itself */ 
 		var gen = await d3.select('#gender')
         gen
@@ -58,8 +57,9 @@
 				gen = "Total"
 				var altcolor = d3.scaleLinear().domain([0,5000]).range(['white','blue'])
 			}
+			
+
 			console.log(gen)
-			/**select the map container and all the path*/
 			var states = d3.select("#mappy").selectAll("path").data(dataset)
 			states.enter()
 			console.log("here")
@@ -67,12 +67,12 @@
 			.transition()
 			.delay(20)
 			.duration(1000)
-			/**d.properties.name refer to the state*/
 			.attr("fill", function(d){
 				return altcolor(grade2[d.properties.name][gen])
 			})
 			
 		}
+
 		/**When the selection change, we record what  is being selected*/
 		gen.on("change", function(d) {
 			var selectedOption = d3.select(this).property("value")
@@ -80,36 +80,34 @@
 		}
 		)
 
-		 /** rac is the button itself */ 
-		 var rac = await d3.select('#race')
-		 rac
-        .selectAll('myOptions')
-            .data(race)
-        .enter()
-        .append('option')
-        .text(function (d) { return d; })
-        .attr("value", function (d) { return d; })
 
-
+		/** rac is the button itself */ 
+		var rac = await d3.select('#race')
+		rac
+		.selectAll('myOptions')
+		.data(race)
+		.enter()
+		.append('option')
+		.text(function (d) { return d; })
+		.attr("value", function (d) { return d; })
+		
 		/**When the selection change, we record what  is being selected*/
 		rac.on("change", function(d) {
 			var selectedOption = d3.select(this).property("value")
 			update(selectedOption)
 		}
 		)
-
-
-		 /** gra is the button itself */ 
-		 var gra = await d3.select('#year')
-		 gra
-        .selectAll('myOptions')
-            .data(year)
-        .enter()
-        .append('option')
-        .text(function (d) { return d; })
-        .attr("value", function (d) { return d; })
-
-
+		
+		/** gra is the button itself */ 
+		var gra = await d3.select('#year')
+		gra
+		.selectAll('myOptions')
+		.data(year)
+		.enter()
+		.append('option')
+		.text(function (d) { return d; })
+		.attr("value", function (d) { return d; })
+		
 		/**When the selection change, we record what  is being selected*/
 		gra.on("change", function(d) {
 			var selectedOption = d3.select(this).property("value")
@@ -117,31 +115,34 @@
 		}
 		)
 
-
 	})
+
 	
-	var myColor = d3.scaleLinear().domain([0,10000]).range(['white','blue'])
+	var myColor = d3.scaleLinear().domain([0,8000]).range(['white','blue'])
+	
+
 	
 </script>
 
 <!--visualization for the map! -->
 <div class="visualization">
-    <svg viewBox="0 0 1200 610">
+    <svg id="mappy" viewBox="0 0 900 610">
         <g fill="white" stroke="black">
             {#each dataset as feature,i}
                 <path 
                 d={path(feature)} 
-                fill={i===hovered ? "hsl(0 0% 50% / 20%)" : myColor(grade2[feature.properties.name].Total)}
+                fill={myColor(grade2[feature.properties.name].Total)}
                 on:click={() => {selected = feature; clicked = 1}} 
                 on:mouseover={(event) =>{
                     hovered = i; recorded_mouse_position = {
                         x: event.pageX,
                         y: event.pageY
                     }
-                    console.log(i, recorded_mouse_position)
+                    //console.log(i, recorded_mouse_position)
                 }}
                 on:mouseout={(event) => { hovered = -1; }}
-                class="state" 
+                class="state"
+				
                 in:draw={{ delay: 0, duration: 1000 }} />
             {/each}
         </g>		
@@ -150,7 +151,6 @@
         {/if}
     </svg>
 </div>
-
 
 <!-- Adding a dropdown for gender-->
 <section class="dropdowns">
@@ -163,23 +163,25 @@
 
 <!-- Adding a dropdown for race-->
 <section class="dropdowns">
-    <h3>
-        Race
-    </h3>
+	<h3>
+	Race
+	</h3>
 	<!-- This gender is the variable gender pointing at array of options-->
-    <select id="race"></select>
-</section>
-
-<!-- Adding a dropdown for grade-->
-<section class="dropdowns">
-    <h3>
-        Grades
-    </h3>
+	<select id="race"></select>
+	</section>
+	
+	<!-- Adding a dropdown for grade-->
+	<section class="dropdowns">
+	<h3>
+	Grades
+	</h3>
 	<!-- This gender is the variable gender pointing at array of options-->
-    <select id="year"></select>
-</section>
+	<select id="year"></select>
+	</section>
 
 <div class="tooltip-selected">
+	
+	
 	{#if clicked !== -1}
 		Selected: {selected.properties.name}
 		had {grade2[selected.properties.name].Total}
