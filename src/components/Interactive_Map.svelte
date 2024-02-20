@@ -1,7 +1,8 @@
 <script>
-
+	
 	import { onMount } from 'svelte';
 	import * as d3 from 'd3';
+	import {json} from 'd3'
 	import { geoPath, geoAlbersUsa } from 'd3-geo';
 	import { draw } from 'svelte/transition';
 	export let dataset = [];
