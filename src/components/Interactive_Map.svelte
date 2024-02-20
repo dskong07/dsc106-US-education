@@ -14,10 +14,10 @@
 	 var genders = ["Overall", "Male", "Female"]
 
 	/** list of option for race dropdown */ 
-	var race = ["Overall", "White", "Asian"]
+	var race = ["total", "native", "asian", "hisp", "black", "white", "pcf_isl", "mixed"]
 
 	/** list of option for year dropdown */ 
-	var year = ["Overall", "Elementary", "Middle", "High"]
+	var year = ["All", "Elementary", "Middle", "High"]
 
 	 /** user interaction through mouse */ 
 	let clicked = -1;
