@@ -8,8 +8,6 @@
 	export let grade2 = [];
 	const projection = geoAlbersUsa()	
 	const path = geoPath(projection)
-<<<<<<< Updated upstream
-=======
 
 	 /** list of option for gender dropdown */ 
 	var genders = ["Overall", "Male", "Female"]
@@ -21,7 +19,6 @@
 	 var year = ["Overall", "Elementary", "Middle", "High"]
 
 	 /** user interaction through mouse */ 
->>>>>>> Stashed changes
 	let clicked = -1;
 	let selected ={
 		properties:{
@@ -33,8 +30,7 @@
 		x: 0, y: 0
 	};
 	
-<<<<<<< Updated upstream
-=======
+
   	onMount(async () => {
 		const wb = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/gendery2.json')
     	grade2 = wb
@@ -122,17 +118,12 @@
 
 
 	})
-
->>>>>>> Stashed changes
 	
 	var myColor = d3.scaleLinear().domain([0,10000]).range(['white','blue'])
 	
 </script>
-<<<<<<< Updated upstream
-=======
 
 <!--visualization for the map! -->
->>>>>>> Stashed changes
 <div class="visualization">
     <svg viewBox="0 0 1200 610">
         <g fill="white" stroke="black">
@@ -159,8 +150,7 @@
     </svg>
 </div>
 
-<<<<<<< Updated upstream
-=======
+
 <!-- Adding a dropdown for gender-->
 <section class="dropdowns">
     <h3>
@@ -169,7 +159,6 @@
 	<!-- This gender is the variable gender pointing at array of options-->
     <select id="gender"></select>
 </section>
->>>>>>> Stashed changes
 
 <!-- Adding a dropdown for race-->
 <section class="dropdowns">
