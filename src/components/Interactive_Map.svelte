@@ -8,6 +8,20 @@
 	export let grade2 = [];
 	const projection = geoAlbersUsa()	
 	const path = geoPath(projection)
+<<<<<<< Updated upstream
+=======
+
+	 /** list of option for gender dropdown */ 
+	var genders = ["Overall", "Male", "Female"]
+
+	 /** list of option for race dropdown */ 
+	 var race = ["Overall", "White", "Asian"]
+
+	 /** list of option for year dropdown */ 
+	 var year = ["Overall", "Elementary", "Middle", "High"]
+
+	 /** user interaction through mouse */ 
+>>>>>>> Stashed changes
 	let clicked = -1;
 	let selected ={
 		properties:{
@@ -19,10 +33,106 @@
 		x: 0, y: 0
 	};
 	
+<<<<<<< Updated upstream
+=======
+  	onMount(async () => {
+		const wb = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/gendery2.json')
+    	grade2 = wb
+    	console.log(wb);
+		const us = await fetch('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/us-states.json')
+			.then(d => d.json())
+		dataset = us.features
+		console.log({ dataset })
+		
+		 /** gen is the button itself */ 
+		var gen = await d3.select('#gender')
+        gen
+        .selectAll('myOptions')
+            .data(genders)
+        .enter()
+        .append('option')
+        .text(function (d) { return d; })
+        .attr("value", function (d) { return d; })
+
+		/**Take the selected option and update the app */
+		function update(gen){
+			var altcolor = d3.scaleLinear().domain([0,grade2['50 states, District of Columbia, and Puerto Rico'][gen]/57]).range(['white','red'])
+			if (gen==='Overall'){
+				gen = "Total"
+				var altcolor = d3.scaleLinear().domain([0,5000]).range(['white','blue'])
+			}
+			console.log(gen)
+			/**select the map container and all the path*/
+			var states = d3.select("#mappy").selectAll("path").data(dataset)
+			states.enter()
+			console.log("here")
+			states
+			.transition()
+			.delay(20)
+			.duration(1000)
+			/**d.properties.name refer to the state*/
+			.attr("fill", function(d){
+				return altcolor(grade2[d.properties.name][gen])
+			})
+			
+		}
+		/**When the selection change, we record what  is being selected*/
+		gen.on("change", function(d) {
+			var selectedOption = d3.select(this).property("value")
+			update(selectedOption)
+		}
+		)
+
+		 /** rac is the button itself */ 
+		 var rac = await d3.select('#race')
+		 rac
+        .selectAll('myOptions')
+            .data(race)
+        .enter()
+        .append('option')
+        .text(function (d) { return d; })
+        .attr("value", function (d) { return d; })
+
+
+		/**When the selection change, we record what  is being selected*/
+		rac.on("change", function(d) {
+			var selectedOption = d3.select(this).property("value")
+			update(selectedOption)
+		}
+		)
+
+
+		 /** gra is the button itself */ 
+		 var gra = await d3.select('#year')
+		 gra
+        .selectAll('myOptions')
+            .data(year)
+        .enter()
+        .append('option')
+        .text(function (d) { return d; })
+        .attr("value", function (d) { return d; })
+
+
+		/**When the selection change, we record what  is being selected*/
+		gra.on("change", function(d) {
+			var selectedOption = d3.select(this).property("value")
+			update(selectedOption)
+		}
+		)
+
+
+	})
+
+>>>>>>> Stashed changes
 	
 	var myColor = d3.scaleLinear().domain([0,10000]).range(['white','blue'])
 	
 </script>
+<<<<<<< Updated upstream
+=======
+
+<!--visualization for the map! -->
+>>>>>>> Stashed changes
 <div class="visualization">
     <svg viewBox="0 0 1200 610">
         <g fill="white" stroke="black">
@@ -49,10 +159,37 @@
     </svg>
 </div>
 
+<<<<<<< Updated upstream
+=======
+<!-- Adding a dropdown for gender-->
+<section class="dropdowns">
+    <h3>
+        Gender
+    </h3>
+	<!-- This gender is the variable gender pointing at array of options-->
+    <select id="gender"></select>
+</section>
+>>>>>>> Stashed changes
+
+<!-- Adding a dropdown for race-->
+<section class="dropdowns">
+    <h3>
+        Race
+    </h3>
+	<!-- This gender is the variable gender pointing at array of options-->
+    <select id="race"></select>
+</section>
+
+<!-- Adding a dropdown for grade-->
+<section class="dropdowns">
+    <h3>
+        Grades
+    </h3>
+	<!-- This gender is the variable gender pointing at array of options-->
+    <select id="year"></select>
+</section>
 
 <div class="tooltip-selected">
-	
-	
 	{#if clicked !== -1}
 		Selected: {selected.properties.name}
 		had {grade2[selected.properties.name].Total}
