@@ -45,10 +45,10 @@
 		x: 0, y: 0
 	};
 	
-
+	let gettinstuff;
 
 	
-  	onMount(async () => {
+  	onMount(gettinstuff = async () => {
 		
 		const wb = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/elem_total.json')
     	grade2 = wb
@@ -294,12 +294,14 @@
 			selected_grade = d3.select(this).property("value")
 			pick_data();
 
-			/**update(selectedOption)*/
+			
 			
 		}
 		)
+		return dataset
 
-	})
+	}
+	)
 
 	
 	var myColor = d3.scaleLinear().domain([0,80000]).range(['white','purple'])
@@ -312,23 +314,27 @@
 <div class="visualization">
     <svg id="mappy" viewBox="0 0 900 610">
         <g fill="white" stroke="black">
-            {#each dataset as feature,i}
-                <path 
-                d={path(feature)} 
-                fill={myColor(allyrs_total[feature.properties.name].total)} 
-                on:click={() => {selected = feature; clicked = 1}} 
-                on:mouseover={(event) =>{
-                    hovered = i; recorded_mouse_position = {
-                        x: event.pageX,
-                        y: event.pageY
-                    }
-                    //console.log(i, recorded_mouse_position)
-                }}
-                on:mouseout={(event) => { hovered = -1; }}
-                class="state"
-				
-                in:draw={{ delay: 0, duration: 1000 }} />
-            {/each}
+			{#await gettinstuff()}
+			{:then dataset}
+				{#each dataset as feature,i}
+					<path 
+					d={path(feature)} 
+					fill={myColor(allyrs_total[feature.properties.name].total)} 
+					on:click={() => {selected = feature; clicked = 1}} 
+					on:mouseover={(event) =>{
+						hovered = i; recorded_mouse_position = {
+							x: event.pageX,
+							y: event.pageY
+						}
+						//console.log(i, recorded_mouse_position)
+					}}
+					on:mouseout={(event) => { hovered = -1; }}
+					class="state"
+					
+					in:draw={{ delay: 0, duration: 1000 }} />
+				{/each}
+			{/await}
+            
         </g>		
         {#if selected}
             <path d={path(selected)} fill="hsl(0 5% 50% / 60%)" stroke="black" stroke-width={2} />
@@ -415,4 +421,30 @@ style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y
 	}
 </style>
 
-<!---->
+<!--
+if gender IS total
+	if race IS total
+		if grade IS total
+			<none>     <-------------- COMPARING STATE vs. WHOLE COUNTRY (e.x - what percentage of dropouts in texas out of ALL grades in ALL states)
+		else (if grade NOT total)
+			<grade>    <-------------- COMPARING GRADE IN THAT STATE vs. ALL GRADES IN THAT STATE (e.x percentage of dropouts in texas in highschool out of ALL GRADES in TEXAS, all races and genders included)
+	else (if race NOT total)
+		if grade IS total
+			<race>     <-------------- COMPARING RACE IN THAT STATE vs. ALL RACES IN THAT STATE (e.x percentage of dropouts in texas who are asian out of ALL races in TEXAS, all grades and genders included)
+		else (grade NOT total)
+			<race and grade>    <-------- COMPARING RACE AND GRADE IN THAT STATE vs. ALL RACES IN THAT GRADE FROM STATE (e.x percentage of asian dropouts in texas in highschool out of ALL races in highschool in TEXAS)
+
+else if (gender NOT total)
+	if race IS total
+		if grade IS total
+			<gender>   <-------------- COMPARING GENDER IN THAT STATE vs. ALL GENDERS IN THAT STATE (e.x percentage of male dropouts in texas out of ALL genders in TEXAS, all races and grades included)
+		else (if grade NOT total)
+			<gender and grade>  <----- COMPARING GENDER AND GRADE IN THAT STATE vs. ALL GRADES IN THAT STATE OF THAT GENDER(e.x percentage of male highschool dropouts in texas out of males of ALL grades in TEXAS, all races included)
+	else (if race NOT total)
+		if grade IS total
+			<gender and race>    <-------- COMPARING GENDER AND RACE IN THAT STATE vs. ALL RACES IN THAT STATE (e.x percentage of male asian dropouts in texas out of ALL male dropouts in TEXAS, all races included)
+		else (grade NOT total)
+			<gender and race and grade>  <----- COMPARING GRADE GENDER AND RACE IN THAT STATE vs. ALL RACES OF THAT GENDER AND GRADE IN STATE(e.x percentage of highschool asian male dropouts in texas in out of ALL highschool male dropouts in TEXAS)
+
+
+-->
