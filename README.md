@@ -4,4 +4,6 @@ by Daniel and Jill
 data source:
 https://civilrightsdata.ed.gov/estimations/2017-2018
 
-### link: https://dkong07.github.io/dsc106-p3/
+### writeup link: https://docs.google.com/document/d/1owJcJxnVfQbraAbsXcjgIzZXyi1tH-3DiGxboxcAT1g/edit?usp=sharing
+
+### visualization website link: https://dkong07.github.io/dsc106-p3/
