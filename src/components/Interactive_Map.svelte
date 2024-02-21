@@ -325,6 +325,8 @@
 		gra.on("change", function(d) {
 			selected_grade = d3.select(this).property("value")
 			pick_data();
+
+			
 			
 		}
 		)
@@ -501,5 +503,9 @@ else if (gender NOT total)
 			<gender and race and grade>  <----- COMPARING GRADE GENDER AND RACE IN THAT STATE vs. ALL RACES OF THAT GENDER AND GRADE IN STATE(e.x percentage of highschool asian male dropouts in texas in out of ALL highschool male dropouts in TEXAS)
 
 
+<<<<<<< HEAD
 -->
 
+=======
+-->
+>>>>>>> 745aa3f167e490f755958c6acc74b8caa4a97165
