@@ -23,6 +23,14 @@
     
   })
 
+  let allyrs_total =[];
+  onMount(async () => {
+    const at = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/allyrs_total.json')
+    allyrs_total = at
+    console.log(at);
+    
+  })
+
   
 
 
@@ -35,7 +43,7 @@
 
     <section class="graph">
       <h2 style="margin-top: 15px">USA</h2>
-      <InteractiveMap {dataset}{grade2}/>
+      <InteractiveMap {dataset}{allyrs_total}/>
     
     </section>
   </div>

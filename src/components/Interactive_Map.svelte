@@ -2,7 +2,7 @@
 
 	import { onMount } from 'svelte';
 	import * as d3 from 'd3';
-	import {json} from 'd3'
+	import {json, scaleLinear, scaleSequential,interpolateRgbBasis} from 'd3'
 	import { geoPath, geoAlbersUsa } from 'd3-geo';
 	import { draw } from 'svelte/transition';
 	export let dataset = [];
@@ -16,8 +16,11 @@
 	export let elem_m=[];
 	export let middle_m=[];
 	export let high_m=[];
-
-
+	export let allyrs_total=[];
+	export let allyrs_f=[];
+	export let allyrs_m=[];
+	export let curr_dataset;
+	
 	const projection = geoAlbersUsa()
 	const path = geoPath(projection)
 
@@ -47,65 +50,94 @@
 	
   	onMount(async () => {
 		
-
 		const wb = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/elem_total.json')
     	grade2 = wb
-    	console.log(wb);
-		
-		/**adding datasets for each grade level for both gender values*/
+    	//console.log(wb);
+
+		//***************************************   ALL GRADES   ***************************************
+		const at = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/allyrs_total.json')
+    	allyrs_total = at
+		console.log('everyone set')
+    	console.log(at);
+
+		//all grades, female
+		const af = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/allyrs_f.json')
+    	allyrs_f = af
+    	
+
+		//all grades, male
+		const am = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/allyrs_m.json')
+    	allyrs_m = am
+    	
+		//***************************************   ALL GENDERS   ***************************************
+		//elementary, total
 		const et = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/elem_total.json')
     	elem_total = et
-    	console.log(et);
 
+		//middle, total
 		const mt = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/middle_total.json')
     	middle_total = mt
-    	console.log(wb);
 
+		//high, total
 		const ht = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/high_total.json')
     	high_total = ht
-    	console.log(ht);
-
+		
+		//***************************************   ALL FEMALE   ***************************************
+		//elementary, female
 		const ef = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/elem_f.json')
     	elem_f = ef
-    	console.log(et);
 
+		//middle, female
 		const mf = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/middle_f.json')
     	middle_f = mf
-    	console.log(wb);
 
 		const hf = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/high_f.json')
     	high_f = hf
-    	console.log(ht);
-
+		
+		//***************************************   ALL MALE   ***************************************
+		//elementary, male
 		const em = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/elem_m.json')
     	elem_m = em
-    	console.log(et);
 
+		//middle, male
 		const mm = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/middle_m.json')
     	middle_m = mm
-    	console.log(wb);
 
+		//high, male
 		const hm = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/high_m.json')
     	high_m = hm
-    	console.log(ht);
 
 
 		/**geo dataset for drawing base paths*/
 		const us = await fetch('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/us-states.json')
 			.then(d => d.json())
 		dataset = us.features
+		console.log('geojson set')
 		console.log({ dataset })
 
-		let current_student_dataset = elem_total;
+		let current_student_dataset = allyrs_total;
 		let selected_race ='total';
 		let selected_gender='total';
 		let selected_grade='All';
 
 		/**select active dataset*/
 		function pick_data(){
+			
 			if(selected_grade==='All'){
-				current_student_dataset = elem_total
+				
+				if(selected_gender==="Male"){
+					console.log('male')
+					current_student_dataset = allyrs_m
+				}
+				else if(selected_gender==="Female"){
+					console.log('female')
+					current_student_dataset = allyrs_f
+				}
+				else{
+					current_student_dataset = allyrs_total
+				}
 			}
+
 			else if(selected_grade==='Elementary'){
 
 				current_student_dataset = elem_total
@@ -137,30 +169,76 @@
 					current_student_dataset = high_f
 				}
 			}
+			console.log('heres the current dataset!')
 			console.log(current_student_dataset)
 			update(current_student_dataset)
 		}
 		
 
 		/**Take the selected option and update the app */
-		function update(curr_dataset){
-			var altcolor = d3.scaleLinear().domain([0,grade2['50 states, District of Columbia, and Puerto Rico'][selected_race]/57]).range(['white','red']) /**TODO - FIGURE OUT WHAT UR GNA DO WITH THIS IT USES GRADE2*/
-			if (gen==='Overall'){
-				gen = "Total"
-				var altcolor = d3.scaleLinear().domain([0,5000]).range(['white','blue'])
-			}
-			
+		
 
-			console.log(gen)
+		function update(curr_dataset){
+			var x = scaleLinear().domain([0,1]).range(['white','purple'])
+
+			
+			if (selected_gender==="Female"){
+				if(selected_grade==='All'&&selected_race==='total'){
+				x = d3.scaleDiverging(["red", "white", "blue"]);
+				}
+				else{
+					x = scaleLinear().domain([0,1]).range(['white','red'])
+				}
+			}
+			else if (selected_gender==="Male"){
+				if(selected_grade==='All'&&selected_race==='total'){
+				x = d3.scaleDiverging(["red", "white", "blue"]);
+				}
+				else{
+					x = scaleLinear().domain([0,1]).range(['white','blue'])
+				}
+			}
+
+
+			var altcolor = x /**TODO - FIGURE OUT WHAT UR GNA DO WITH THIS IT USES GRADE2*/
+
+			console.log("updating...")
 			var states = d3.select("#mappy").selectAll("path").data(dataset)
 			states.enter()
-			console.log("here")
+
+			var curr_race = 'total'
+			var denom = curr_dataset
+
+			if(selected_gender==='total'){
+				if (selected_race==='total'){
+					if(selected_grade!=='All'){
+						denom = allyrs_total
+						console.log('me!')
+					}
+
+				}
+			}
+
+			else if(selected_gender!=='total'){
+				if(selected_race==='total'){
+					denom = allyrs_total
+				}
+			}
+
+			else{
+
+			}
 			states
 			.transition()
 			.delay(20)
 			.duration(1000)
 			.attr("fill", function(d){
-				return altcolor(curr_dataset[d.properties.name][selected_race])
+				if(selected_gender==='total' && selected_grade==='All' && selected_race==='total'){
+					altcolor = d3.scaleLinear().domain([0,80000]).range(['white','purple'])
+					return altcolor(curr_dataset[d.properties.name][selected_race])
+				}
+				console.log(curr_dataset[d.properties.name][selected_race]/denom[d.properties.name][curr_race])
+				return altcolor(curr_dataset[d.properties.name][selected_race]/denom[d.properties.name][curr_race])
 			})
 			
 		}
@@ -228,7 +306,7 @@
 		update(elem_total)
 	}
 	
-	var myColor = d3.scaleLinear().domain([0,8000]).range(['white','blue'])
+	var myColor = d3.scaleLinear().domain([0,80000]).range(['white','purple'])
 	
 
 	
@@ -241,7 +319,7 @@
             {#each dataset as feature,i}
                 <path 
                 d={path(feature)} 
-                fill={myColor(grade2[feature.properties.name].total)} 
+                fill={myColor(allyrs_total[feature.properties.name].total)} 
                 on:click={() => {selected = feature; clicked = 1}} 
                 on:mouseover={(event) =>{
                     hovered = i; recorded_mouse_position = {
@@ -320,7 +398,7 @@
 class={hovered === -1 ? "tooltip-hidden": "tooltip-visible"}
 style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y + 40}px">
 	{#if hovered !== -1}
-		this be {dataset[hovered].properties.name}
+		this be {dataset[hovered].properties.name} dropping out at a rate of {curr_dataset}
 	{/if}
 </div>
 	
