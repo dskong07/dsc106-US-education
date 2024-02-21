@@ -49,7 +49,7 @@
 	
 	let gettinstuff;
 	gettinstuff = async () => {
-		const at = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/allyrs_total.json')
+		const at = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/allyrs_total.json')
     	allyrs_total = at
 
 		const us = await fetch('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/us-states.json')
@@ -75,56 +75,56 @@
     	//console.log(wb);
 
 		//***************************************   ALL GRADES   ***************************************
-		const at = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/allyrs_total.json')
+		const at = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/allyrs_total.json')
     	allyrs_total = at
 		console.log('everyone set')
     	console.log(at);
 
 		//all grades, female
-		const af = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/allyrs_f.json')
+		const af = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/allyrs_f.json')
     	allyrs_f = af
     	
 
 		//all grades, male
-		const am = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/allyrs_m.json')
+		const am = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/allyrs_m.json')
     	allyrs_m = am
     	
 		//***************************************   ALL GENDERS   ***************************************
 		//elementary, total
-		const et = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/elem_total.json')
+		const et = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/elem_total.json')
     	elem_total = et
 
 		//middle, total
-		const mt = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/middle_total.json')
+		const mt = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/middle_total.json')
     	middle_total = mt
 
 		//high, total
-		const ht = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/high_total.json')
+		const ht = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/high_total.json')
     	high_total = ht
 		
 		//***************************************   ALL FEMALE   ***************************************
 		//elementary, female
-		const ef = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/elem_f.json')
+		const ef = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/elem_f.json')
     	elem_f = ef
 
 		//middle, female
-		const mf = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/middle_f.json')
+		const mf = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/middle_f.json')
     	middle_f = mf
 
-		const hf = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/high_f.json')
+		const hf = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/high_f.json')
     	high_f = hf
 		
 		//***************************************   ALL MALE   ***************************************
 		//elementary, male
-		const em = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/elem_m.json')
+		const em = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/elem_m.json')
     	elem_m = em
 
 		//middle, male
-		const mm = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/middle_m.json')
+		const mm = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/middle_m.json')
     	middle_m = mm
 
 		//high, male
-		const hm = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/high_m.json')
+		const hm = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/high_m.json')
     	high_m = hm
 
 
