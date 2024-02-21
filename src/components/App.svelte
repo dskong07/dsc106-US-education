@@ -3,8 +3,6 @@
   
   import { onMount } from 'svelte';
   import { read, utils, writeFile } from 'xlsx';
-  import Temp from "./Temp.svelte";
-  import Filter from "./Filter.svelte";
   import InteractiveMap from "./Interactive_Map.svelte";
   var genders;
   var years = ["All Grades",2,3]
@@ -25,6 +23,14 @@
     
   })
 
+  let allyrs_total =[];
+  onMount(async () => {
+    const at = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/allyrs_total.json')
+    allyrs_total = at
+    console.log(at);
+    
+  })
+
   
 
 
@@ -37,7 +43,7 @@
 
     <section class="graph">
       <h2 style="margin-top: 15px">USA</h2>
-      <InteractiveMap {dataset}{grade2}/>
+      <InteractiveMap {dataset}{allyrs_total}/>
     
     </section>
   </div>
