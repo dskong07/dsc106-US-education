@@ -2,7 +2,7 @@
 
 	import { onMount } from 'svelte';
 	import * as d3 from 'd3';
-	import {json} from 'd3'
+	import {json, scaleLinear, scaleSequential,interpolateRgbBasis} from 'd3'
 	import { geoPath, geoAlbersUsa } from 'd3-geo';
 	import { draw } from 'svelte/transition';
 	export let dataset = [];
@@ -19,6 +19,7 @@
 	export let allyrs_total=[];
 	export let allyrs_f=[];
 	export let allyrs_m=[];
+	export let curr_dataset;
 	
 	const projection = geoAlbersUsa()
 	const path = geoPath(projection)
@@ -175,46 +176,56 @@
 		
 
 		/**Take the selected option and update the app */
+		
+
 		function update(curr_dataset){
-			var color = ['white','purple']
+			var x = scaleLinear().domain([0,1]).range(['white','purple'])
+
+			
 			if (selected_gender==="Female"){
-				color = ['white', 'pink']
+				if(selected_grade==='All'&&selected_race==='total'){
+				x = d3.scaleDiverging(["red", "white", "blue"]);
+				}
+				else{
+					x = scaleLinear().domain([0,1]).range(['white','red'])
+				}
 			}
 			else if (selected_gender==="Male"){
-				color = ['white', 'blue']
+				if(selected_grade==='All'&&selected_race==='total'){
+				x = d3.scaleDiverging(["red", "white", "blue"]);
+				}
+				else{
+					x = scaleLinear().domain([0,1]).range(['white','blue'])
+				}
 			}
 
 
-			var altcolor = d3.scaleLinear().domain([0,1]).range(color) /**TODO - FIGURE OUT WHAT UR GNA DO WITH THIS IT USES GRADE2*/
-			if (gen==='Overall'){
-				gen = "Total"
-				var altcolor = d3.scaleLinear().domain([0,5000]).range(['white','blue'])
-			}
+			var altcolor = x /**TODO - FIGURE OUT WHAT UR GNA DO WITH THIS IT USES GRADE2*/
+
 			console.log("updating...")
 			var states = d3.select("#mappy").selectAll("path").data(dataset)
 			states.enter()
 
 			var curr_race = 'total'
-			var curr_grade = 'All'
-			var curr_gen = 'total'
 			var denom = curr_dataset
-			if (selected_race==='total'){
-				if(selected_grade==='All'){
+
+			if(selected_gender==='total'){
+				if (selected_race==='total'){
+					if(selected_grade!=='All'){
+						denom = allyrs_total
+						console.log('me!')
+					}
+
+				}
+			}
+
+			else if(selected_gender!=='total'){
+				if(selected_race==='total'){
 					denom = allyrs_total
-					console.log('me!')
 				}
-				else if(selected_grade==='Elementary'){
-					denom = elem_total
-					console.log('me!')
-				}
-				else if(selected_grade==='Middle'){
-					denom = middle_total
-					console.log('me!')
-				}
-				else{
-					denom = high_total
-					console.log('me!')
-				}
+			}
+
+			else{
 
 			}
 			states
@@ -222,6 +233,10 @@
 			.delay(20)
 			.duration(1000)
 			.attr("fill", function(d){
+				if(selected_gender==='total' && selected_grade==='All' && selected_race==='total'){
+					altcolor = d3.scaleLinear().domain([0,80000]).range(['white','purple'])
+					return altcolor(curr_dataset[d.properties.name][selected_race])
+				}
 				console.log(curr_dataset[d.properties.name][selected_race]/denom[d.properties.name][curr_race])
 				return altcolor(curr_dataset[d.properties.name][selected_race]/denom[d.properties.name][curr_race])
 			})
@@ -364,7 +379,7 @@
 class={hovered === -1 ? "tooltip-hidden": "tooltip-visible"}
 style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y + 40}px">
 	{#if hovered !== -1}
-		this be {dataset[hovered].properties.name}
+		this be {dataset[hovered].properties.name} dropping out at a rate of {curr_dataset}
 	{/if}
 </div>
 	
