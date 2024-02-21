@@ -16,8 +16,10 @@
 	export let elem_m=[];
 	export let middle_m=[];
 	export let high_m=[];
-
-
+	export let allyrs_total=[];
+	export let allyrs_f=[];
+	export let allyrs_m=[];
+	
 	const projection = geoAlbersUsa()
 	const path = geoPath(projection)
 
