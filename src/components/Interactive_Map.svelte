@@ -32,9 +32,11 @@
 	};
 	
   	onMount(async () => {
+		/**This is test dataset*/
 		const wb = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/gendery2.json')
     	grade2 = wb
-    	console.log(wb);
+
+
 		const us = await fetch('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/us-states.json')
 			.then(d => d.json())
 		dataset = us.features
