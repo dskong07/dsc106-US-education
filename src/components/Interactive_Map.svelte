@@ -46,13 +46,6 @@
 
 	
   	onMount(async () => {
-<<<<<<< HEAD
-		/**This is test dataset*/
-		const wb = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/gendery2.json')
-    	grade2 = wb
-
-
-=======
 		
 
 		const wb = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/elem_total.json')
@@ -98,7 +91,6 @@
 
 
 		/**geo dataset for drawing base paths*/
->>>>>>> d6aec8f308c5a74bd65a5e89fa0dfb831304b30d
 		const us = await fetch('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/us-states.json')
 			.then(d => d.json())
 		dataset = us.features
@@ -231,6 +223,10 @@
 
 	})
 
+	function handleClick() {
+		alert('Button clicked!');
+		update(elem_total)
+	}
 	
 	var myColor = d3.scaleLinear().domain([0,8000]).range(['white','blue'])
 	
@@ -282,20 +278,35 @@
 	</h3>
 	<!-- This gender is the variable gender pointing at array of options-->
 	<select id="race"></select>
-	</section>
+</section>
 	
-	<!-- Adding a dropdown for grade-->
+<!-- Adding a dropdown for grade-->
 	<section class="dropdowns">
 	<h3>
 	Grades
 	</h3>
-	<!-- This gender is the variable gender pointing at array of options-->
+	<!-- This year is the variable yaer pointing at array of options-->
 	<select id="year"></select>
-	</section>
+</section>
+
+<!--Adding a button for button-->
+<section class='reset'>
+    <button 
+    id='resetb'
+    on:click={() => {
+        var first = document.getElementById("gender");
+        var sec = document.getElementById("race");
+        var thir = document.getElementById("year");
+        first.selectedIndex=0;
+        sec.selectedIndex=0;
+        thir.selectedIndex=0;
+        console.log('click')
+    }}>
+        Reset Filter
+    </button>
+</section>
 
 <div class="tooltip-selected">
-	
-	
 	{#if clicked !== -1}
 		Selected: {selected.properties.name}
 		had {grade2[selected.properties.name].Total}
@@ -343,6 +354,45 @@ style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y
 		position: absolute;
 		padding: 10px;
 	}
+
+	.reset {
+    /* Your button styles */
+    display: inline-block;
+    padding: 10px 20px;
+	margin: 10px;
+    color: #fff; /* Example text color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
 </style>
 
 <!---->
+
+
+<!--Adding a button for button-->
+<section class='reset'>
+    <button 
+    id='resetb'
+    on:click={() => {
+        var first = document.getElementById("gender");
+        var sec = document.getElementById("race");
+        var thir = document.getElementById("year");
+        first.selectedIndex=0;
+        sec.selectedIndex=0;
+        thir.selectedIndex=0;
+        console.log('click')
+    }}>
+        Reset Filter
+    </button>
+</section>
+
+.reset {
+    /* Your button styles */
+    display: inline-block;
+    padding: 10px 20px;
+	margin: 10px;
+    color: #fff; /* Example text color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
