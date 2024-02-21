@@ -42,7 +42,7 @@
 
 
     <section class="graph">
-      <h2 style="margin-top: 15px">USA</h2>
+      <h2 class = usa style="margin-top: 15px">Map of USA</h2>
       <InteractiveMap {dataset}{allyrs_total}/>
     
     </section>
@@ -62,6 +62,10 @@
 
 </main>
 
+<svelte:head>
+    <link href="https://fonts.googleapis.com/css2?family=Annapurna+SIL:wght@400;700&family=Kode+Mono:wght@400..700&display=swap" rel="stylesheet">
+</svelte:head>
+
 <style>    
 .main {
   border: 1px solid black;
@@ -75,7 +79,15 @@
   margin-left: 0px;
   width:800px;
   height:700px;
+
     }
+
+.usa{
+  font-family: "Annapurna SIL", serif;
+  font-weight: 700;
+  font-size: 40px;
+  color: #009996;
+}
 
 .filter {
   display: inline-block;

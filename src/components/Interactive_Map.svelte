@@ -19,13 +19,19 @@
 	export let allyrs_total=[];
 	export let allyrs_f=[];
 	export let allyrs_m=[];
-	export let curr_dataset;
+
+	export let curr_dataset;;
+	export let race_selected = 'total';
+	export let gender_selected = 'total';
+	export let grade_selected = 'All';
+	export let denom;;
+	export let percentage = 0;
 	
 	const projection = geoAlbersUsa()
 	const path = geoPath(projection)
 
 	 /** list of option for gender dropdown */ 
-	 var genders = ["total", "Male", "Female"]
+	var genders = ["total", "Male", "Female"]
 
 	/** list of option for race dropdown */ 
 	var race = ["total", "native", "asian", "hisp", "black", "white", "pcf_isl", "mixed"]
@@ -45,10 +51,10 @@
 		x: 0, y: 0
 	};
 	
-
+	let gettinstuff;
 
 	
-  	onMount(async () => {
+  	onMount(gettinstuff = async () => {
 		
 		const wb = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/elem_total.json')
     	grade2 = wb
@@ -171,6 +177,8 @@
 			}
 			console.log('heres the current dataset!')
 			console.log(current_student_dataset)
+			curr_dataset = current_student_dataset
+			console.log(current_student_dataset)
 			update(current_student_dataset)
 		}
 		
@@ -180,6 +188,9 @@
 
 		function update(curr_dataset){
 			var x = scaleLinear().domain([0,1]).range(['white','purple'])
+			race_selected = selected_race
+			gender_selected = selected_gender
+			grade_selected = selected_grade
 
 			
 			if (selected_gender==="Female"){
@@ -207,27 +218,48 @@
 			states.enter()
 
 			var curr_race = 'total'
-			var denom = curr_dataset
+			denom = curr_dataset
 
 			if(selected_gender==='total'){
 				if (selected_race==='total'){
+					if(selected_grade==='All'){
+						console.log(curr_dataset)
+					}
+					else{
+
+					}
+				}
+				else{
 					if(selected_grade!=='All'){
 						denom = allyrs_total
 						console.log('me!')
 					}
+					else{
 
+					}
+				}
+			}
+			else {
+				if (selected_race==='total'){
+					if(selected_grade==='All'){
+						denom = allyrs_total
+						console.log('me!')
+					}
+					else{
+
+					}
+				}
+				else{
+					if(selected_grade!=='All'){
+						denom = allyrs_total
+						console.log('me!')
+					}
+					else{
+
+					}
 				}
 			}
 
-			else if(selected_gender!=='total'){
-				if(selected_race==='total'){
-					denom = allyrs_total
-				}
-			}
-
-			else{
-
-			}
 			states
 			.transition()
 			.delay(20)
@@ -293,18 +325,19 @@
 		gra.on("change", function(d) {
 			selected_grade = d3.select(this).property("value")
 			pick_data();
-
-			/**update(selectedOption)*/
 			
 		}
 		)
+		return dataset
 
-	})
+	}
+	)
 
 	function handleClick() {
-		alert('Button clicked!');
-		update(elem_total)
+		// Reload the page
+		location.reload();
 	}
+
 	
 	var myColor = d3.scaleLinear().domain([0,80000]).range(['white','purple'])
 	
@@ -316,23 +349,27 @@
 <div class="visualization">
     <svg id="mappy" viewBox="0 0 900 610">
         <g fill="white" stroke="black">
-            {#each dataset as feature,i}
-                <path 
-                d={path(feature)} 
-                fill={myColor(allyrs_total[feature.properties.name].total)} 
-                on:click={() => {selected = feature; clicked = 1}} 
-                on:mouseover={(event) =>{
-                    hovered = i; recorded_mouse_position = {
-                        x: event.pageX,
-                        y: event.pageY
-                    }
-                    //console.log(i, recorded_mouse_position)
-                }}
-                on:mouseout={(event) => { hovered = -1; }}
-                class="state"
-				
-                in:draw={{ delay: 0, duration: 1000 }} />
-            {/each}
+			{#await gettinstuff()}
+			{:then dataset}
+				{#each dataset as feature,i}
+					<path 
+					d={path(feature)} 
+					fill={myColor(allyrs_total[feature.properties.name].total)} 
+					on:click={() => {selected = feature; clicked = 1}} 
+					on:mouseover={(event) =>{
+						hovered = i; recorded_mouse_position = {
+							x: event.pageX,
+							y: event.pageY
+						}
+						//console.log(i, recorded_mouse_position)
+					}}
+					on:mouseout={(event) => { hovered = -1; }}
+					class="state"
+					
+					in:draw={{ delay: 0, duration: 1000 }} />
+				{/each}
+			{/await}
+            
         </g>		
         {#if selected}
             <path d={path(selected)} fill="hsl(0 5% 50% / 60%)" stroke="black" stroke-width={2} />
@@ -340,67 +377,57 @@
     </svg>
 </div>
 
-<!-- Adding a dropdown for gender-->
-<section class="dropdowns">
-    <h3>
-        Gender
-    </h3>
-	<!-- This gender is the variable gender pointing at array of options-->
-    <select id="gender"></select>
-</section>
-
-<!-- Adding a dropdown for race-->
-<section class="dropdowns">
-	<h3>
-	Race
-	</h3>
-	<!-- This gender is the variable gender pointing at array of options-->
-	<select id="race"></select>
-</section>
-	
-<!-- Adding a dropdown for grade-->
+<div class = "filtering">
+	<!-- Adding a dropdown for gender-->
 	<section class="dropdowns">
-	<h3>
-	Grades
-	</h3>
-	<!-- This year is the variable yaer pointing at array of options-->
-	<select id="year"></select>
-</section>
+		<h3>
+        	Gender
+    	</h3>
+		<!-- This gender is the variable gender pointing at array of options-->
+    	<select id="gender"></select>
+	</section>
 
-<!--Adding a button for button-->
-<section class='reset'>
-    <button 
-    id='resetb'
-    on:click={() => {
-        var first = document.getElementById("gender");
-        var sec = document.getElementById("race");
-        var thir = document.getElementById("year");
-        first.selectedIndex=0;
-        sec.selectedIndex=0;
-        thir.selectedIndex=0;
-        console.log('click')
-    }}>
-        Reset Filter
-    </button>
-</section>
+	<!-- Adding a dropdown for race-->
+	<section class="dropdowns">
+		<h3>
+		Race
+		</h3>
+		<!-- This gender is the variable gender pointing at array of options-->
+		<select id="race"></select>
+		</section>
+	
+	<!-- Adding a dropdown for grade-->
+		<section class="dropdowns">
+		<h3>
+		Grades
+		</h3>
+		<!-- This gender is the variable gender pointing at array of options-->
+		<select id="year"></select>
+	</section>
 
-<div class="tooltip-selected">
-	{#if clicked !== -1}
-		Selected: {selected.properties.name}
-		had {grade2[selected.properties.name].Total}
-		second year students held back in 2017-2018!
-	{:else}
-		pick a state!
-	{/if}
+	<!--Adding a button for button-->
+	<section class='reset'>
+    	<button 
+    	id='resetb'
+    	on:click={handleClick}>
+        	Reset Filter
+    	</button>
+	</section>
 </div>
+
 
 <div	
 class={hovered === -1 ? "tooltip-hidden": "tooltip-visible"}
 style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y + 40}px">
-	{#if hovered !== -1}
-		this be {dataset[hovered].properties.name} dropping out at a rate of {curr_dataset}
+	{#if hovered !== -1} 
+		{percentage}
+		this be {dataset[hovered].properties.name} curr_dataset[d.properties.name][selected_race]}dropping out at a rate of {curr_dataset}
 	{/if}
 </div>
+
+<svelte:head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+</svelte:head>
 	
 <style>
     .visualization {
@@ -409,11 +436,6 @@ style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y
 		margin-top: 1px;
 		text-align: middle;
     }
-	.tooltip-selected {
-		text-align: center;
-		margin-top: 8px;
-		font-size: 1.5rem;
-	}
 	.tooltip-hidden {
 		visibility: hidden;
 		font-family: "Nunito", sans-serif;
@@ -438,39 +460,46 @@ style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y
     display: inline-block;
     padding: 10px 20px;
 	margin: 10px;
-    color: #fff; /* Example text color */
+    color: #fff; 
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
+	}
+
+	.filtering{
+		transform: translate(-500px, -500px);
+	}
+
+	.dropdowns{
+        font-family: 'Roboto', sans-serif;
+	}
 </style>
 
-<!---->
+<!--
+if gender IS total
+	if race IS total
+		if grade IS total
+			<none>     <-------------- COMPARING STATE vs. WHOLE COUNTRY (e.x - what percentage of dropouts in texas out of ALL grades in ALL states)
+		else (if grade NOT total)
+			<grade>    <-------------- COMPARING GRADE IN THAT STATE vs. ALL GRADES IN THAT STATE (e.x percentage of dropouts in texas in highschool out of ALL GRADES in TEXAS, all races and genders included)
+	else (if race NOT total)
+		if grade IS total
+			<race>     <-------------- COMPARING RACE IN THAT STATE vs. ALL RACES IN THAT STATE (e.x percentage of dropouts in texas who are asian out of ALL races in TEXAS, all grades and genders included)
+		else (grade NOT total)
+			<race and grade>    <-------- COMPARING RACE AND GRADE IN THAT STATE vs. ALL RACES IN THAT GRADE FROM STATE (e.x percentage of asian dropouts in texas in highschool out of ALL races in highschool in TEXAS)
+
+else if (gender NOT total)
+	if race IS total
+		if grade IS total
+			<gender>   <-------------- COMPARING GENDER IN THAT STATE vs. ALL GENDERS IN THAT STATE (e.x percentage of male dropouts in texas out of ALL genders in TEXAS, all races and grades included)
+		else (if grade NOT total)
+			<gender and grade>  <----- COMPARING GENDER AND GRADE IN THAT STATE vs. ALL GRADES IN THAT STATE OF THAT GENDER(e.x percentage of male highschool dropouts in texas out of males of ALL grades in TEXAS, all races included)
+	else (if race NOT total)
+		if grade IS total
+			<gender and race>    <-------- COMPARING GENDER AND RACE IN THAT STATE vs. ALL RACES IN THAT STATE (e.x percentage of male asian dropouts in texas out of ALL male dropouts in TEXAS, all races included)
+		else (grade NOT total)
+			<gender and race and grade>  <----- COMPARING GRADE GENDER AND RACE IN THAT STATE vs. ALL RACES OF THAT GENDER AND GRADE IN STATE(e.x percentage of highschool asian male dropouts in texas in out of ALL highschool male dropouts in TEXAS)
 
 
-<!--Adding a button for button-->
-<section class='reset'>
-    <button 
-    id='resetb'
-    on:click={() => {
-        var first = document.getElementById("gender");
-        var sec = document.getElementById("race");
-        var thir = document.getElementById("year");
-        first.selectedIndex=0;
-        sec.selectedIndex=0;
-        thir.selectedIndex=0;
-        console.log('click')
-    }}>
-        Reset Filter
-    </button>
-</section>
+-->
 
-.reset {
-    /* Your button styles */
-    display: inline-block;
-    padding: 10px 20px;
-	margin: 10px;
-    color: #fff; /* Example text color */
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
