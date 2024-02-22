@@ -19,25 +19,20 @@
 	export let allyrs_total=[];
 	export let allyrs_f=[];
 	export let allyrs_m=[];
-
-	export let curr_dataset;;
-	export let race_selected = 'total';
-	export let gender_selected = 'total';
-	export let grade_selected = 'All';
-	export let denom;;
-	export let percentage = 0;
-	
+	export let curr_dataset;
+	let state_statistic = {};
+	let total_statistic ={};
 	const projection = geoAlbersUsa()
 	const path = geoPath(projection)
 
 	 /** list of option for gender dropdown */ 
-	var genders = ["total", "Male", "Female"]
+	 var genders = ["total", "Male", "Female"];
 
 	/** list of option for race dropdown */ 
-	var race = ["total", "native", "asian", "hisp", "black", "white", "pcf_isl", "mixed"]
+	var race = ["total", "native", "asian", "hisp", "black", "white", "pcf_isl", "mixed"];
 
 	/** list of option for year dropdown */ 
-	var year = ["All", "Elementary", "Middle", "High"]
+	var year = ["All", "Elementary", "Middle", "High"];
 
 	 /** user interaction through mouse */ 
 	let clicked = -1;
@@ -46,71 +41,90 @@
 			name:'50 states, District of Columbia, and Puerto Rico'
 		}
 	};
+	let all_options = 1;
 	let hovered = -1; 
 	let recorded_mouse_position = {
 		x: 0, y: 0
 	};
 	
 	let gettinstuff;
+	gettinstuff = async () => {
+		const at = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/allyrs_total.json')
+    	allyrs_total = at
 
+		const us = await fetch('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/us-states.json')
+			.then(d => d.json())
+		dataset = us.features
+
+		return dataset
+	}
+
+	let getting_selections;
+	getting_selections = async () => {
+		selected_race ='total';
+		selected_gender='total';
+		selected_grade='All';
+
+		return
+	}
 	
-  	onMount(gettinstuff = async () => {
+  	onMount( async () => {
 		
 		const wb = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/elem_total.json')
     	grade2 = wb
     	//console.log(wb);
 
 		//***************************************   ALL GRADES   ***************************************
-		const at = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/allyrs_total.json')
+		const at = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/allyrs_total.json')
     	allyrs_total = at
 		console.log('everyone set')
     	console.log(at);
 
 		//all grades, female
-		const af = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/allyrs_f.json')
+		const af = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/allyrs_f.json')
     	allyrs_f = af
     	
 
 		//all grades, male
-		const am = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/allyrs_m.json')
+		const am = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/allyrs_m.json')
     	allyrs_m = am
     	
 		//***************************************   ALL GENDERS   ***************************************
 		//elementary, total
-		const et = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/elem_total.json')
+		const et = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/elem_total.json')
     	elem_total = et
 
 		//middle, total
-		const mt = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/middle_total.json')
+		const mt = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/middle_total.json')
     	middle_total = mt
 
 		//high, total
-		const ht = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/high_total.json')
+		const ht = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/high_total.json')
     	high_total = ht
 		
 		//***************************************   ALL FEMALE   ***************************************
 		//elementary, female
-		const ef = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/elem_f.json')
+		const ef = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/elem_f.json')
     	elem_f = ef
 
 		//middle, female
-		const mf = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/middle_f.json')
+		const mf = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/middle_f.json')
     	middle_f = mf
 
-		const hf = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/high_f.json')
+		const hf = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/high_f.json')
     	high_f = hf
 		
 		//***************************************   ALL MALE   ***************************************
 		//elementary, male
-		const em = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/elem_m.json')
+		const em = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/elem_m.json')
     	elem_m = em
 
 		//middle, male
-		const mm = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/middle_m.json')
+		const mm = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/middle_m.json')
     	middle_m = mm
 
 		//high, male
-		const hm = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/high_m.json')
+		const hm = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/high_m.json')
     	high_m = hm
 
 
@@ -177,10 +191,10 @@
 			}
 			console.log('heres the current dataset!')
 			console.log(current_student_dataset)
-			curr_dataset = current_student_dataset
-			console.log(current_student_dataset)
 			update(current_student_dataset)
 		}
+		
+
 		
 
 		/**Take the selected option and update the app */
@@ -188,12 +202,10 @@
 
 		function update(curr_dataset){
 			var x = scaleLinear().domain([0,1]).range(['white','purple'])
-			race_selected = selected_race
-			gender_selected = selected_gender
-			grade_selected = selected_grade
-
+			all_options = -1
 			
 			if (selected_gender==="Female"){
+				
 				if(selected_grade==='All'&&selected_race==='total'){
 				x = d3.scaleDiverging(["red", "white", "blue"]);
 				}
@@ -218,48 +230,29 @@
 			states.enter()
 
 			var curr_race = 'total'
-			denom = curr_dataset
+			var denom = curr_dataset
 
 			if(selected_gender==='total'){
 				if (selected_race==='total'){
-					if(selected_grade==='All'){
-						console.log(curr_dataset)
-					}
-					else{
-
-					}
-				}
-				else{
 					if(selected_grade!=='All'){
 						denom = allyrs_total
+						all_options = 1
 						console.log('me!')
 					}
-					else{
 
-					}
-				}
-			}
-			else {
-				if (selected_race==='total'){
-					if(selected_grade==='All'){
-						denom = allyrs_total
-						console.log('me!')
-					}
-					else{
-
-					}
-				}
-				else{
-					if(selected_grade!=='All'){
-						denom = allyrs_total
-						console.log('me!')
-					}
-					else{
-
-					}
 				}
 			}
 
+			else if(selected_gender!=='total'){
+				if(selected_race==='total'){
+					denom = allyrs_total
+				}
+			}
+
+			else{
+
+			}
+			state_statistic={}
 			states
 			.transition()
 			.delay(20)
@@ -270,9 +263,10 @@
 					return altcolor(curr_dataset[d.properties.name][selected_race])
 				}
 				console.log(curr_dataset[d.properties.name][selected_race]/denom[d.properties.name][curr_race])
+				state_statistic[d.properties.name] = curr_dataset[d.properties.name][selected_race]/denom[d.properties.name][curr_race]
 				return altcolor(curr_dataset[d.properties.name][selected_race]/denom[d.properties.name][curr_race])
 			})
-			
+			console.log(state_statistic)
 		}
 		
 
@@ -330,15 +324,34 @@
 			
 		}
 		)
-		return dataset
+
+		function reset_filters(){
+			console.log('resetting filters!')
+			selected_gender = 'total'
+			selected_grade = 'All'
+			selected_race = 'total'
+			pick_data();
+		}
+
+		var reset_button = await d3.select('#resetb')
+
+		reset_button
+		.on('click',() =>{
+			var first = document.getElementById("gender");
+			var sec = document.getElementById("race");
+			var thir = document.getElementById("year");
+			first.selectedIndex=0;
+			sec.selectedIndex=0;
+			thir.selectedIndex=0;
+			console.log('click')
+			reset_filters();
+			all_options = 1;
+
+		})
+		
 
 	}
 	)
-
-	function handleClick() {
-		// Reload the page
-		location.reload();
-	}
 
 	
 	var myColor = d3.scaleLinear().domain([0,80000]).range(['white','purple'])
@@ -354,6 +367,8 @@
 			{#await gettinstuff()}
 			{:then dataset}
 				{#each dataset as feature,i}
+					{total_statistic[feature.properties.name] = allyrs_total[feature.properties.name].total}
+					{all_options = 1}
 					<path 
 					d={path(feature)} 
 					fill={myColor(allyrs_total[feature.properties.name].total)} 
@@ -379,10 +394,11 @@
     </svg>
 </div>
 
+
 <div class = "filtering">
 	<!-- Adding a dropdown for gender-->
 	<section class="dropdowns">
-		<h3>
+    	<h3>
         	Gender
     	</h3>
 		<!-- This gender is the variable gender pointing at array of options-->
@@ -399,37 +415,46 @@
 		</section>
 	
 	<!-- Adding a dropdown for grade-->
-		<section class="dropdowns">
+	<section class="dropdowns">
 		<h3>
 		Grades
 		</h3>
 		<!-- This gender is the variable gender pointing at array of options-->
 		<select id="year"></select>
+
 	</section>
 
-	<!--Adding a button for button-->
-	<section class='reset'>
-    	<button 
-    	id='resetb'
-    	on:click={handleClick}>
-        	Reset Filter
-    	</button>
-	</section>
+	<button id='resetb'>
+		reset filters
+	</button>
+
+
 </div>
-
+<div class="tooltip-selected">
+	
+	{#if clicked !== -1}
+		Selected: {selected.properties.name}
+		had {grade2[selected.properties.name].Total}
+		second year students held back in 2017-2018!
+	{:else}
+		pick a state!
+	{/if}
+</div>
 
 <div	
 class={hovered === -1 ? "tooltip-hidden": "tooltip-visible"}
 style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y + 40}px">
-	{#if hovered !== -1} 
-		{percentage}
-		this be {dataset[hovered].properties.name} curr_dataset[d.properties.name][selected_race]}dropping out at a rate of {curr_dataset}
-	{/if}
-</div>
 
-<svelte:head>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
-</svelte:head>
+		{#if hovered !== -1}
+			{#if all_options === 1}
+				<!--{console.log('total_statistic', 1)}-->
+				this be {dataset[hovered].properties.name} dropping out at a rate of {total_statistic[dataset[hovered].properties.name]}
+			{:else if all_options !== 1}
+				<!--{console.log('total_statistic', all_options)}-->
+				this be {dataset[hovered].properties.name} dropping out at a rate of {state_statistic[dataset[hovered].properties.name]}
+			{/if }
+		{/if}
+</div>
 	
 <style>
     .visualization {
@@ -438,6 +463,11 @@ style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y
 		margin-top: 1px;
 		text-align: middle;
     }
+	.tooltip-selected {
+		text-align: center;
+		margin-top: 8px;
+		font-size: 1.5rem;
+	}
 	.tooltip-hidden {
 		visibility: hidden;
 		font-family: "Nunito", sans-serif;
@@ -457,17 +487,16 @@ style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y
 		padding: 10px;
 	}
 
-	.reset {
+	.resetb {
     /* Your button styles */
-    display: inline-block;
-    padding: 10px 20px;
-	margin: 10px;
+
+    padding: 20px 20px;
+	margin: 20px;
     color: #fff; 
     border: none;
     border-radius: 5px;
     cursor: pointer;
 	}
-
 	.filtering{
 		transform: translate(-500px, -500px);
 	}
@@ -475,6 +504,7 @@ style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y
 	.dropdowns{
         font-family: 'Roboto', sans-serif;
 	}
+
 </style>
 
 <!--
@@ -503,9 +533,4 @@ else if (gender NOT total)
 			<gender and race and grade>  <----- COMPARING GRADE GENDER AND RACE IN THAT STATE vs. ALL RACES OF THAT GENDER AND GRADE IN STATE(e.x percentage of highschool asian male dropouts in texas in out of ALL highschool male dropouts in TEXAS)
 
 
-<<<<<<< HEAD
 -->
-
-=======
--->
->>>>>>> 745aa3f167e490f755958c6acc74b8caa4a97165

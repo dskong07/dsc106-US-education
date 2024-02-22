@@ -25,7 +25,7 @@
 
   let allyrs_total =[];
   onMount(async () => {
-    const at = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/allyrs_total.json')
+    const at = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/allyrs_total.json')
     allyrs_total = at
     console.log(at);
     
@@ -67,37 +67,37 @@
 </svelte:head>
 
 <style>    
-.main {
-  border: 1px solid black;
-  margin: 1rem;
-  padding: 2rem 2rem;
-  text-align: center;
-}
-.graph {
-  text-align: center;
-  display: inline-block;
-  margin-left: 0px;
-  width:800px;
-  height:700px;
-
-    }
-
-.usa{
-  font-family: "Annapurna SIL", serif;
-  font-weight: 700;
-  font-size: 40px;
-  color: #009996;
-}
-
-.filter {
-  display: inline-block;
-  margin-left: 0px;
-  width:200px;
-  height:700px;
-    }
-.applets {
-  display: inline-block;
-  padding: 1rem 1rem;
-  vertical-align: middle;
-}
-</style>
+  .main {
+    border: 1px solid black;
+    margin: 1rem;
+    padding: 2rem 2rem;
+    text-align: center;
+  }
+  .graph {
+    text-align: center;
+    display: inline-block;
+    margin-left: 0px;
+    width:800px;
+    height:700px;
+  
+      }
+  
+  .usa{
+    font-family: "Annapurna SIL", serif;
+    font-weight: 700;
+    font-size: 40px;
+    color: #009996;
+  }
+  
+  .filter {
+    display: inline-block;
+    margin-left: 0px;
+    width:200px;
+    height:700px;
+      }
+  .applets {
+    display: inline-block;
+    padding: 1rem 1rem;
+    vertical-align: middle;
+  }
+  </style>
