@@ -439,26 +439,52 @@
 <div class="tooltip-selected">
 	
 	{#if clicked !== -1}
+		{#if gender_selected === "total" && race_selected === "total" && grades_selected === 'All'}
+			There are {total_statistic[selected.properties.name]} students held back in the state of {selected.properties.name}
+		{:else if gender_selected === "total" && race_selected === "total" && grades_selected !== 'All'}
+			Out of all students held back in {selected.properties.name}, {Math.round(state_statistic[selected.properties.name]* 100) / 100}% are {grades_selected} School students
+		{:else if gender_selected === "total" && race_selected !== "total" && grades_selected === 'All'}
+			Out of all students held back in {selected.properties.name}, {Math.round(state_statistic[selected.properties.name]* 100) / 100}% are {race_selected} students
+		{:else if gender_selected === "total" && race_selected !== "total" && grades_selected !== 'All'}
+			Out of all {grades_selected} School students held back in {selected.properties.name}, {Math.round(state_statistic[selected.properties.name]* 100) / 100}% are {race_selected} students
+		{:else if gender_selected !== "total" && race_selected === "total" && grades_selected === 'All'}
+			Out of all students held back in {selected.properties.name}, {Math.round(state_statistic[selected.properties.name]* 100) / 100}% are {gender_selected} students
+		{:else if gender_selected !== "total" && race_selected === "total" && grades_selected !== 'All'}
+			Out of all {gender_selected} students held back in {selected.properties.name}, {Math.round(state_statistic[selected.properties.name]* 100) / 100}% were {grades_selected} School students 
+		{:else if gender_selected !== "total" && race_selected !== "total" && grades_selected === 'All'}
+			Out of all {gender_selected} students held back in {selected.properties.name}, {Math.round(state_statistic[selected.properties.name]* 100) / 100}% were {race_selected} students
+		{:else if gender_selected !== "total" && race_selected !== "total" && grades_selected !== 'All'}
+			Out of all {gender_selected}, {grades_selected} School students held back in {selected.properties.name}, {Math.round(state_statistic[selected.properties.name]* 100) / 100}% were {race_selected} students
+		{/if}
+		<!-- 
 		Selected: {selected.properties.name}
 		had {grade2[selected.properties.name].Total}
-		second year students held back in 2017-2018!
+		second year students held back in 2017-2018! -->
 	{:else}
 		{#if gender_selected === "total" && race_selected === "total" && grades_selected === 'All'}
-			Click the state to see the percent of student held back in that state out of all the held back student in the nation!
+			Hover over the state to see the number of student held back in that state
+			<br>Click the state to see precise description of what these number means!
 		{:else if gender_selected === "total" && race_selected === "total" && grades_selected !== 'All'}
-			Click the state to see the percent of {grades_selected} School students held back out of all the held back student in selected state
+			Hover over the state to see the percent of {grades_selected} School students held back out of all the held back student in selected state
+			<br>Click the state to see precise description of what these number means!
 		{:else if gender_selected === "total" && race_selected !== "total" && grades_selected === 'All'}
-			Click the state to see the percent of {race_selected} students held back out of all the held back student in selected state
+			Hover over the state to see the percent of {race_selected} students held back out of all the held back student in selected state
+			<br>Click the state to see precise description of what these number means!
 		{:else if gender_selected === "total" && race_selected !== "total" && grades_selected !== 'All'}
-			Click the state to see the percent of {race_selected} students held back out of {grades_selected} School students that are held back in each selected state
+			Hover over the state to see the percent of {race_selected} students held back out of {grades_selected} School students that are held back in each selected state
+			<br>Click the state to see precise description of what these number means!
 		{:else if gender_selected !== "total" && race_selected === "total" && grades_selected === 'All'}
-			Click the state to see the percent of {gender_selected} students held back in each selected state
+			Hover over the state to see the percent of {gender_selected} students held back in each selected state
+			<br>Click the state to see precise description of what these number means!
 		{:else if gender_selected !== "total" && race_selected === "total" && grades_selected !== 'All'}
-			Click the state to see the percent of {grades_selected} School students held back out of all the {gender_selected} students that are held back in each selected state
+			Hover over the state to see the percent of {grades_selected} School students held back out of all the {gender_selected} students that are held back in each selected state
+			<br>Click the state to see precise description of what these number means!
 		{:else if gender_selected !== "total" && race_selected !== "total" && grades_selected === 'All'}
-			Click the state to see the percent of {gender_selected}, {race_selected} students held back out of all the {gender_selected} students that are held back in each selected state
+			Hover over the state to see the percent of {gender_selected}, {race_selected} students held back out of all the {gender_selected} students that are held back in each selected state
+			<br>Click the state to see precise description of what these number means!
 		{:else if gender_selected !== "total" && race_selected !== "total" && grades_selected !== 'All'}
-			Click the state to see the percent of {race_selected} students held back out of all the {gender_selected}, {grades_selected} School students that are held back in each selected state
+			Hover over the state to see the percent of {race_selected} students held back out of all the {gender_selected}, {grades_selected} School students that are held back in each selected state
+			<br>Click the state to see precise description of what these number means!
 		{/if}
 	{/if}
 </div>
@@ -468,14 +494,31 @@ class={hovered === -1 ? "tooltip-hidden": "tooltip-visible"}
 style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y + 40}px">
 
 		{#if hovered !== -1}
-			{#if all_options === 1}
-				<!--{console.log('total_statistic', 1)}-->
-				hopefully this be {dataset[hovered].properties.name} dropping out at a rate of {total_statistic[dataset[hovered].properties.name]}
-			{:else if all_options !== 1}
-				{console.log(gender_selected, race_selected, grades_selected)}
-				<!--{console.log('total_statistic', all_options)}-->
-				this be {dataset[hovered].properties.name} dropping out at a rate of {state_statistic[dataset[hovered].properties.name]} %
-			{/if }
+			{#if gender_selected === "total" && race_selected === "total" && grades_selected === 'All'}
+				Selected state: {dataset[hovered].properties.name}
+				<br><br>Number of student held back: {total_statistic[dataset[hovered].properties.name]}
+			{:else if gender_selected === "total" && race_selected === "total" && grades_selected !== 'All'}
+				Selected state: {dataset[hovered].properties.name}
+				<br><br>Proportion of held back student being {grades_selected} Schooler: {Math.round(state_statistic[dataset[hovered].properties.name] * 100) / 100}% 
+			{:else if gender_selected === "total" && race_selected !== "total" && grades_selected === 'All'}
+				Selected state: {dataset[hovered].properties.name}
+				<br><br>Proportion of held back student being {race_selected}: {Math.round(state_statistic[dataset[hovered].properties.name] * 100) / 100}%
+			{:else if gender_selected === "total" && race_selected !== "total" && grades_selected !== 'All'}
+				Selected state: {dataset[hovered].properties.name}
+				<br><br>Proportion of {grades_selected} School students held back being {race_selected}: {Math.round(state_statistic[dataset[hovered].properties.name] * 100) / 100}%
+			{:else if gender_selected !== "total" && race_selected === "total" && grades_selected === 'All'}
+				Selected state: {dataset[hovered].properties.name}
+				<br><br>Proportion of held back student being {gender_selected}: {Math.round(state_statistic[dataset[hovered].properties.name] * 100) / 100}%
+			{:else if gender_selected !== "total" && race_selected === "total" && grades_selected !== 'All'}
+				Selected state: {dataset[hovered].properties.name}
+				<br><br>Proportion of {gender_selected} students held back being {grades_selected} schooler: {Math.round(state_statistic[dataset[hovered].properties.name] * 100) / 100}%
+			{:else if gender_selected !== "total" && race_selected !== "total" && grades_selected === 'All'}
+				Selected state: {dataset[hovered].properties.name}
+				<br><br>Proportion of {gender_selected} students held back being {race_selected}: {Math.round(state_statistic[dataset[hovered].properties.name] * 100) / 100}%
+			{:else if gender_selected !== "total" && race_selected !== "total" && grades_selected !== 'All'}
+				Selected state: {dataset[hovered].properties.name}
+				<br><br>Proportion of {gender_selected}, {grades_selected} School students held back being {race_selected}: {Math.round(state_statistic[dataset[hovered].properties.name] * 100) / 100}%
+			{/if}
 		{/if}
 </div>
 	
