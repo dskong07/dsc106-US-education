@@ -499,25 +499,25 @@ style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y
 				<br><br>Number of student held back: {total_statistic[dataset[hovered].properties.name]}
 			{:else if gender_selected === "total" && race_selected === "total" && grades_selected !== 'All'}
 				Selected state: {dataset[hovered].properties.name}
-				<br><br>Proportion of held back student being {grades_selected} Schooler: {Math.round(state_statistic[dataset[hovered].properties.name] * 100) / 100}% 
+				<br><br>Proportion of held back student being {grades_selected} Schooler: {Math.round(state_statistic[dataset[hovered].properties.name] * 10) / 10}% 
 			{:else if gender_selected === "total" && race_selected !== "total" && grades_selected === 'All'}
 				Selected state: {dataset[hovered].properties.name}
-				<br><br>Proportion of held back student being {race_selected}: {Math.round(state_statistic[dataset[hovered].properties.name] * 100) / 100}%
+				<br><br>Proportion of held back student being {race_selected}: {Math.round(state_statistic[dataset[hovered].properties.name] * 10) / 10}%
 			{:else if gender_selected === "total" && race_selected !== "total" && grades_selected !== 'All'}
 				Selected state: {dataset[hovered].properties.name}
-				<br><br>Proportion of {grades_selected} School students held back being {race_selected}: {Math.round(state_statistic[dataset[hovered].properties.name] * 100) / 100}%
+				<br><br>Proportion of {grades_selected} School students held back being {race_selected}: {Math.round(state_statistic[dataset[hovered].properties.name] * 10) / 10}%
 			{:else if gender_selected !== "total" && race_selected === "total" && grades_selected === 'All'}
 				Selected state: {dataset[hovered].properties.name}
-				<br><br>Proportion of held back student being {gender_selected}: {Math.round(state_statistic[dataset[hovered].properties.name] * 100) / 100}%
+				<br><br>Proportion of held back student being {gender_selected}: {Math.round(state_statistic[dataset[hovered].properties.name] * 10) / 10}%
 			{:else if gender_selected !== "total" && race_selected === "total" && grades_selected !== 'All'}
 				Selected state: {dataset[hovered].properties.name}
-				<br><br>Proportion of {gender_selected} students held back being {grades_selected} schooler: {Math.round(state_statistic[dataset[hovered].properties.name] * 100) / 100}%
+				<br><br>Proportion of {gender_selected} students held back being {grades_selected} schooler: {Math.round(state_statistic[dataset[hovered].properties.name] * 10) / 10}%
 			{:else if gender_selected !== "total" && race_selected !== "total" && grades_selected === 'All'}
 				Selected state: {dataset[hovered].properties.name}
-				<br><br>Proportion of {gender_selected} students held back being {race_selected}: {Math.round(state_statistic[dataset[hovered].properties.name] * 100) / 100}%
+				<br><br>Proportion of {gender_selected} students held back being {race_selected}: {Math.round(state_statistic[dataset[hovered].properties.name] * 10) / 10}%
 			{:else if gender_selected !== "total" && race_selected !== "total" && grades_selected !== 'All'}
 				Selected state: {dataset[hovered].properties.name}
-				<br><br>Proportion of {gender_selected}, {grades_selected} School students held back being {race_selected}: {Math.round(state_statistic[dataset[hovered].properties.name] * 100) / 100}%
+				<br><br>Proportion of {gender_selected}, {grades_selected} School students held back being {race_selected}: {Math.round(state_statistic[dataset[hovered].properties.name] * 10) / 10}%
 			{/if}
 		{/if}
 </div>
@@ -543,7 +543,7 @@ style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y
 	}
 
 	.tooltip-visible {
-		font: 25px sans-serif;
+		font: 20px sans-serif;
 		font-family: "Nunito", sans-serif;
 		visibility: visible;
 		background-color: #f0dba8;
