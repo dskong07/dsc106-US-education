@@ -6,7 +6,7 @@
 	import { geoPath, geoAlbersUsa } from 'd3-geo';
 	import { draw } from 'svelte/transition';
 	export let dataset = [];
-	export let grade2 = [];
+
 	export let elem_total=[];
 	export let middle_total=[];
 	export let high_total=[];
@@ -42,6 +42,9 @@
 		}
 	};
 	let all_options = 1;
+	let gender_selected = 'total'
+	let race_selected = 'total'
+	let grades_selected = 'All'
 	let hovered = -1; 
 	let recorded_mouse_position = {
 		x: 0, y: 0
@@ -70,9 +73,6 @@
 	
   	onMount( async () => {
 		
-		const wb = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/jill_version/elem_total.json')
-    	grade2 = wb
-    	//console.log(wb);
 
 		//***************************************   ALL GRADES   ***************************************
 		const at = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/allyrs_total.json')
@@ -203,6 +203,9 @@
 		function update(curr_dataset){
 			var x = scaleLinear().domain([0,1]).range(['white','purple'])
 			all_options = -1
+			gender_selected = selected_gender
+			race_selected = selected_race
+			grades_selected = selected_grade
 			
 			if (selected_gender==="Female"){
 				
@@ -223,7 +226,7 @@
 			}
 
 
-			var altcolor = x /**TODO - FIGURE OUT WHAT UR GNA DO WITH THIS IT USES GRADE2*/
+			var altcolor = x 
 
 			console.log("updating...")
 			var states = d3.select("#mappy").selectAll("path").data(dataset)
@@ -360,7 +363,7 @@
 	
 </script>
 
-<!--visualization for the map!  *************** TODO - GRADE2[FEATURE].TOTAL UPDATE THIS SHIT IT GOT GRADE2 IN IT***************-->
+<!--visualization for the map!  -->
 <div class="visualization">
     <svg id="mappy" viewBox="0 0 900 610">
         <g fill="white" stroke="black">
@@ -394,47 +397,95 @@
     </svg>
 </div>
 
-<!-- Adding a dropdown for gender-->
-<section class="dropdowns">
-    <h3>
-        Gender
-    </h3>
-	<!-- This gender is the variable gender pointing at array of options-->
-    <select id="gender"></select>
-</section>
 
-<!-- Adding a dropdown for race-->
-<section class="dropdowns">
-	<h3>
-	Race
-	</h3>
-	<!-- This gender is the variable gender pointing at array of options-->
-	<select id="race"></select>
+<div class = "filtering">
+	<h2>
+		Filter Categories
+	</h2>
+	<!-- Adding a dropdown for gender-->
+	<section class="dropdowns">
+    	<h3>
+        	Gender
+    	</h3>
+		<!-- This gender is the variable gender pointing at array of options-->
+    	<select id="gender"></select>
 	</section>
+
+	<!-- Adding a dropdown for race-->
+	<section class="dropdowns">
+		<h3>
+		Race
+		</h3>
+		<!-- This gender is the variable gender pointing at array of options-->
+		<select id="race"></select>
+		</section>
 	
 	<!-- Adding a dropdown for grade-->
 	<section class="dropdowns">
-	<h3>
-	Grades
-	</h3>
-	<!-- This gender is the variable gender pointing at array of options-->
-	<select id="year"></select>
+		<h3>
+		Grades
+		</h3>
+		<!-- This gender is the variable gender pointing at array of options-->
+		<select id="year"></select>
 
 	</section>
-	<button id='resetb'>
+
+	<button class = reset_button id='resetb'>
 		reset filters
 	</button>
-	<section>
-		
-	</section>
+
+
+</div>
 <div class="tooltip-selected">
 	
 	{#if clicked !== -1}
+		{#if gender_selected === "total" && race_selected === "total" && grades_selected === 'All'}
+			There were {total_statistic[selected.properties.name]} students held back in the state of {selected.properties.name}.
+		{:else if gender_selected === "total" && race_selected === "total" && grades_selected !== 'All'}
+			Out of all students held back in {selected.properties.name}, {Math.round(state_statistic[selected.properties.name]* 1000)/10}% are {grades_selected} school students.
+		{:else if gender_selected === "total" && race_selected !== "total" && grades_selected === 'All'}
+			Out of all students held back in {selected.properties.name}, {Math.round(state_statistic[selected.properties.name]* 1000)/10}% are {race_selected} students.
+		{:else if gender_selected === "total" && race_selected !== "total" && grades_selected !== 'All'}
+			Out of all {grades_selected} School students held back in {selected.properties.name}, {Math.round(state_statistic[selected.properties.name]* 1000)/10}% are {race_selected} students.
+		{:else if gender_selected !== "total" && race_selected === "total" && grades_selected === 'All'}
+			Out of all students held back in {selected.properties.name}, {Math.round(state_statistic[selected.properties.name]* 1000)/10}% are {gender_selected} students.
+		{:else if gender_selected !== "total" && race_selected === "total" && grades_selected !== 'All'}
+			Out of all {gender_selected} students held back in {selected.properties.name}, {Math.round(state_statistic[selected.properties.name]* 1000)/10}% were {grades_selected} School students .
+		{:else if gender_selected !== "total" && race_selected !== "total" && grades_selected === 'All'}
+			Out of all {gender_selected} students held back in {selected.properties.name}, {Math.round(state_statistic[selected.properties.name]* 1000)/10}% were {race_selected} students.
+		{:else if gender_selected !== "total" && race_selected !== "total" && grades_selected !== 'All'}
+			Out of all {gender_selected}, {grades_selected} School students held back in {selected.properties.name}, {Math.round(state_statistic[selected.properties.name]* 1000)/10}% were {race_selected} students.
+		{/if}
+		<!-- 
 		Selected: {selected.properties.name}
 		had {grade2[selected.properties.name].Total}
-		second year students held back in 2017-2018!
+		second year students held back in 2017-2018! -->
 	{:else}
-		pick a state!
+		{#if gender_selected === "total" && race_selected === "total" && grades_selected === 'All'}
+			Hover over a state to see the number of students held back.
+			<br>Select the state for a more detailed explanation of the visualization!
+		{:else if gender_selected === "total" && race_selected === "total" && grades_selected !== 'All'}
+			Hover over the state to see the percent of {grades_selected} School students held back out of all the held back student in selected state
+			<br>Select the state for a more detailed explanation of the visualization!
+		{:else if gender_selected === "total" && race_selected !== "total" && grades_selected === 'All'}
+			Hover over the state to see the percent of {race_selected} students held back out of all the held back student in selected state
+			<br>Select the state for a more detailed explanation of the visualization!
+		{:else if gender_selected === "total" && race_selected !== "total" && grades_selected !== 'All'}
+			Hover over the state to see the percent of {race_selected} students held back out of {grades_selected} School students that are held back in each selected state
+			<br>Select the state for a more detailed explanation of the visualization!
+		{:else if gender_selected !== "total" && race_selected === "total" && grades_selected === 'All'}
+			Hover over the state to see the percent of {gender_selected} students held back in each selected state
+			<br>Select the state for a more detailed explanation of the visualization!
+		{:else if gender_selected !== "total" && race_selected === "total" && grades_selected !== 'All'}
+			Hover over the state to see the percent of {grades_selected} School students held back out of all the {gender_selected} students that are held back in each selected state
+			<br>Select the state for a more detailed explanation of the visualization!
+		{:else if gender_selected !== "total" && race_selected !== "total" && grades_selected === 'All'}
+			Hover over the state to see the percent of {gender_selected}, {race_selected} students held back out of all the {gender_selected} students that are held back in each selected state
+			<br>Select the state for a more detailed explanation of the visualization!
+		{:else if gender_selected !== "total" && race_selected !== "total" && grades_selected !== 'All'}
+			Hover over the state to see the percent of {race_selected} students held back out of all the {gender_selected}, {grades_selected} School students that are held back in each selected state
+			<br>Select the state for a more detailed explanation of the visualization!
+		{/if}
 	{/if}
 </div>
 
@@ -443,13 +494,31 @@ class={hovered === -1 ? "tooltip-hidden": "tooltip-visible"}
 style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y + 40}px">
 
 		{#if hovered !== -1}
-			{#if all_options === 1}
-				<!--{console.log('total_statistic', 1)}-->
-				this be {dataset[hovered].properties.name} dropping out at a rate of {total_statistic[dataset[hovered].properties.name]}
-			{:else if all_options !== 1}
-				<!--{console.log('total_statistic', all_options)}-->
-				this be {dataset[hovered].properties.name} dropping out at a rate of {state_statistic[dataset[hovered].properties.name]}
-			{/if }
+			{#if gender_selected === "total" && race_selected === "total" && grades_selected === 'All'}
+				Selected state: {dataset[hovered].properties.name}
+				<br><br>Number of students held back: {total_statistic[dataset[hovered].properties.name]}
+			{:else if gender_selected === "total" && race_selected === "total" && grades_selected !== 'All'}
+				Selected state: {dataset[hovered].properties.name}
+				<br><br>Proportion of held back students in {grades_selected} Schooler: {Math.round(state_statistic[dataset[hovered].properties.name] * 1000)/10}% 
+			{:else if gender_selected === "total" && race_selected !== "total" && grades_selected === 'All'}
+				Selected state: {dataset[hovered].properties.name}
+				<br><br>Proportion of held back students who were {race_selected}: {Math.round(state_statistic[dataset[hovered].properties.name] * 1000)/10}%
+			{:else if gender_selected === "total" && race_selected !== "total" && grades_selected !== 'All'}
+				Selected state: {dataset[hovered].properties.name}
+				<br><br>Proportion of {grades_selected} School students held back who were {race_selected}: {Math.round(state_statistic[dataset[hovered].properties.name] * 1000)/10}%
+			{:else if gender_selected !== "total" && race_selected === "total" && grades_selected === 'All'}
+				Selected state: {dataset[hovered].properties.name}
+				<br><br>Proportion of held back student who were {gender_selected}: {Math.round(state_statistic[dataset[hovered].properties.name] * 1000)/10}%
+			{:else if gender_selected !== "total" && race_selected === "total" && grades_selected !== 'All'}
+				Selected state: {dataset[hovered].properties.name}
+				<br><br>Proportion of {gender_selected} {grades_selected} schooler students held back: {Math.round(state_statistic[dataset[hovered].properties.name] * 1000)/10}%
+			{:else if gender_selected !== "total" && race_selected !== "total" && grades_selected === 'All'}
+				Selected state: {dataset[hovered].properties.name}
+				<br><br>Proportion of {gender_selected} students held back who were {race_selected}: {Math.round(state_statistic[dataset[hovered].properties.name] * 1000)/10}%
+			{:else if gender_selected !== "total" && race_selected !== "total" && grades_selected !== 'All'}
+				Selected state: {dataset[hovered].properties.name}
+				<br><br>Proportion of {gender_selected}, {grades_selected} School students held back who were {race_selected}: {Math.round(state_statistic[dataset[hovered].properties.name] * 1000)/10}%
+			{/if}
 		{/if}
 </div>
 	
@@ -464,6 +533,10 @@ style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y
 		text-align: center;
 		margin-top: 8px;
 		font-size: 1.5rem;
+		transform: translateY(-500px);
+		height: 400px;
+		width: 700px;
+
 	}
 	.tooltip-hidden {
 		visibility: hidden;
@@ -473,7 +546,7 @@ style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y
 	}
 
 	.tooltip-visible {
-		font: 25px sans-serif;
+		font: 20px sans-serif;
 		font-family: "Nunito", sans-serif;
 		visibility: visible;
 		background-color: #f0dba8;
@@ -483,6 +556,28 @@ style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y
 		position: absolute;
 		padding: 10px;
 	}
+
+	.reset_button {
+    /* Your button styles */
+
+    padding: 20px 20px;
+	margin: 40px;
+    color: #696262; 
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+	}
+	.filtering{
+		width: 300px;
+		height: 500px;
+		transform: translate(-500px, -500px);
+		font-family: 'Roboto', sans-serif;
+	}
+
+	.dropdowns{
+        font-family: 'Roboto', sans-serif;
+	}
+
 </style>
 
 <!--
