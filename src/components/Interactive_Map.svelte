@@ -42,6 +42,9 @@
 		}
 	};
 	let all_options = 1;
+	let gender_selected = 'total'
+	let race_selected = 'total'
+	let grades_selected = 'All'
 	let hovered = -1; 
 	let recorded_mouse_position = {
 		x: 0, y: 0
@@ -203,6 +206,9 @@
 		function update(curr_dataset){
 			var x = scaleLinear().domain([0,1]).range(['white','purple'])
 			all_options = -1
+			gender_selected = selected_gender
+			race_selected = selected_race
+			grades_selected = selected_grade
 			
 			if (selected_gender==="Female"){
 				
@@ -437,7 +443,23 @@
 		had {grade2[selected.properties.name].Total}
 		second year students held back in 2017-2018!
 	{:else}
-		pick a state!
+		{#if gender_selected === "total" && race_selected === "total" && grades_selected === 'All'}
+			Click the state to see the percent of student held back in that state out of all the held back student in the nation!
+		{:else if gender_selected === "total" && race_selected === "total" && grades_selected !== 'All'}
+			Click the state to see the percent of {grades_selected} School students held back out of all the held back student in selected state
+		{:else if gender_selected === "total" && race_selected !== "total" && grades_selected === 'All'}
+			Click the state to see the percent of {race_selected} students held back out of all the held back student in selected state
+		{:else if gender_selected === "total" && race_selected !== "total" && grades_selected !== 'All'}
+			Click the state to see the percent of {race_selected} students held back out of {grades_selected} School students that are held back in each selected state
+		{:else if gender_selected !== "total" && race_selected === "total" && grades_selected === 'All'}
+			Click the state to see the percent of {gender_selected} students held back in each selected state
+		{:else if gender_selected !== "total" && race_selected === "total" && grades_selected !== 'All'}
+			Click the state to see the percent of {grades_selected} School students held back out of all the {gender_selected} students that are held back in each selected state
+		{:else if gender_selected !== "total" && race_selected !== "total" && grades_selected === 'All'}
+			Click the state to see the percent of {gender_selected}, {race_selected} students held back out of all the {gender_selected} students that are held back in each selected state
+		{:else if gender_selected !== "total" && race_selected !== "total" && grades_selected !== 'All'}
+			Click the state to see the percent of {race_selected} students held back out of all the {gender_selected}, {grades_selected} School students that are held back in each selected state
+		{/if}
 	{/if}
 </div>
 
@@ -448,10 +470,11 @@ style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y
 		{#if hovered !== -1}
 			{#if all_options === 1}
 				<!--{console.log('total_statistic', 1)}-->
-				this be {dataset[hovered].properties.name} dropping out at a rate of {total_statistic[dataset[hovered].properties.name]}
+				hopefully this be {dataset[hovered].properties.name} dropping out at a rate of {total_statistic[dataset[hovered].properties.name]}
 			{:else if all_options !== 1}
+				{console.log(gender_selected, race_selected, grades_selected)}
 				<!--{console.log('total_statistic', all_options)}-->
-				this be {dataset[hovered].properties.name} dropping out at a rate of {state_statistic[dataset[hovered].properties.name]}
+				this be {dataset[hovered].properties.name} dropping out at a rate of {state_statistic[dataset[hovered].properties.name]} %
 			{/if }
 		{/if}
 </div>
@@ -467,6 +490,7 @@ style="left: {recorded_mouse_position.x + 40}px; top: {recorded_mouse_position.y
 		text-align: center;
 		margin-top: 8px;
 		font-size: 1.5rem;
+		transform: translateY(-300px);
 	}
 	.tooltip-hidden {
 		visibility: hidden;
