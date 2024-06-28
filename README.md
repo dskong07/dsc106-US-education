@@ -8,4 +8,4 @@ the raw data files are in the raw_data folder, and the preproc done is in the da
 
 ### writeup link: https://docs.google.com/document/d/1owJcJxnVfQbraAbsXcjgIzZXyi1tH-3DiGxboxcAT1g/edit?usp=sharing
 
-### visualization website link: https://dkong07.github.io/dsc106-p3/
+### visualization website link: https://dskong07.github.io/dsc106-US-education/
