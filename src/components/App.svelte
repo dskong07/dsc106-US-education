@@ -10,7 +10,7 @@
   
   let dataset = [];
   onMount(async () => {
-		const us = await fetch('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/us-states.json')
+		const us = await fetch('https://raw.githubusercontent.com/dskong07/dsc106-US-education/main/us-states.json')
 			.then(d => d.json())
 		dataset = us.features
 		
@@ -20,7 +20,7 @@
 
   let allyrs_total =[];
   onMount(async () => {
-    const at = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/allyrs_total.json')
+    const at = await json('https://raw.githubusercontent.com/dskong07/dsc106-US-education/main/allyrs_total.json')
     allyrs_total = at
     console.log(at);
     

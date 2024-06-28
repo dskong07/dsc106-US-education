@@ -26,12 +26,12 @@
  // draw map
  	onMount(async ()=> {
 
-		const us = await fetch('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/us-states.json')
+		const us = await fetch('https://raw.githubusercontent.com/dskong07/dsc106-US-education/main/us-states.json')
 			.then(d => d.json())
 		dataset = us.features
 		console.log({ dataset })
 
-		const wb = await json('https://raw.githubusercontent.com/dkong07/dsc106-p3/main/gendery2.json')
+		const wb = await json('https://raw.githubusercontent.com/dskong07/dsc106-US-education/main/gendery2.json')
     	grade2 = wb
     	console.log(wb);
 
